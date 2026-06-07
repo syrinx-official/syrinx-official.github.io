@@ -19,7 +19,6 @@
             box-sizing: border-box;
         }
 
-        /* 상단 헤더 로고 */
         .header-logo {
             font-size: 1.1rem;
             letter-spacing: 0.5rem;
@@ -38,14 +37,12 @@
             color: #ffffff;
         }
 
-        /* 스토어 컨테이너 */
         .store-container {
             max-width: 800px;
             width: 100%;
             margin-bottom: 60px;
         }
 
-        /* 섹션 타이틀 */
         .section-title {
             font-size: 0.8rem;
             letter-spacing: 0.2rem;
@@ -62,7 +59,6 @@
             margin-top: 0;
         }
 
-        /* 상품 그리드 */
         .product-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -76,14 +72,12 @@
             }
         }
 
-        /* 상품 아이템 */
         .product-item {
             display: flex;
             flex-direction: column;
             align-items: flex-start;
         }
 
-        /* 이미지 플레이스홀더 */
         .product-image-placeholder {
             width: 100%;
             aspect-ratio: 3 / 4;
@@ -112,11 +106,10 @@
             font-size: 0.85rem;
             letter-spacing: 0.05rem;
             color: #ffffff;
-            margin-bottom: 15px; /* 라벨과의 간격 조정 */
+            margin-bottom: 15px;
             font-weight: 400;
         }
 
-        /* 준비중 상태의 미니멀 라벨 */
         .status-label {
             font-size: 0.7rem;
             letter-spacing: 0.08rem;
@@ -128,10 +121,67 @@
             display: inline-block;
         }
         
-        /* 7월 런칭 강조 스타일 */
         .status-label.released-month {
             color: #888888;
             border-color: #333333;
         }
 
-        /* 하단 뒤로가기 */
+        .back-home {
+            font-size: 0.75rem;
+            letter-spacing: 0.1rem;
+            margin-top: 40px;
+        }
+        
+        .back-home a {
+            color: #444444;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+        
+        .back-home a:hover {
+            color: #ffffff;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="header-logo"><a href="index.html">SYRINX</a></div>
+
+    <div class="store-container">
+        
+        <div class="section-title">01. Print & Digital Archive</div>
+        <div class="product-grid">
+            <div class="product-item">
+                <div class="product-image-placeholder">SYRINX BOOK COVER</div>
+                <div class="product-info">
+                    <div class="product-name">SYRINX : 1st Official Book</div>
+                    <span class="status-label released-month">COMING IN JULY</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="section-title">02. Apparel Line</div>
+        <div class="product-grid">
+            <div class="product-item">
+                <div class="product-image-placeholder">SYRINX SIGNATURE T-SHIRT</div>
+                <div class="product-info">
+                    <div class="product-name">Syrinx Essential T-Shirt</div>
+                    <span class="status-label">COMING SOON</span>
+                </div>
+            </div>
+            <div class="product-item">
+                <div class="product-image-placeholder">SYRINX MINIMAL CAP</div>
+                <div class="product-info">
+                    <div class="product-name">Syrinx Structure Ball Cap</div>
+                    <span class="status-label">COMING SOON</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="back-home">
+        <a href="index.html">← BACK TO HOME</a>
+    </div>
+
+</body>
+</html>
