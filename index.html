@@ -1,16 +1,16 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ko">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SYRINX - Brand History</title>
+    <title>SYRINX</title>
     <style>
         body {
             background-color: #000000;
             color: #ffffff;
             font-family: 'Helvetica Neue', Arial, sans-serif;
             margin: 0;
-            min-height: 100vh;
+            height: 100vh;
             display: flex;
             flex-direction: column;
             justify-content: space-between;
@@ -18,123 +18,60 @@
             padding: 80px 20px;
             box-sizing: border-box;
         }
-
-        /* 상단 헤더 로고 및 메인 이동 링크 */
-        .header-logo {
-            font-size: 1.1rem;
-            letter-spacing: 0.5rem;
+        .logo {
+            font-size: 1.5rem;
+            letter-spacing: 0.8rem;
             font-weight: 300;
             text-transform: uppercase;
+            margin-top: 40px;
         }
-        
-        .header-logo a {
-            color: #444444; /* 기본은 차분한 다크 그레이 */
-            text-decoration: none;
-            transition: color 0.3s ease;
-        }
-        
-        .header-logo a:hover {
-            color: #ffffff; /* 마우스를 올리면 선명한 흰색으로 전환 */
-        }
-
-        /* 컨테이너 및 타이틀 */
-        .history-container {
-            max-width: 520px;
-            width: 100%;
-            text-align: center;
-            margin: 40px 0;
-        }
-
-        .history-title {
-            font-size: 1rem;
-            letter-spacing: 0.3rem;
+        .logo a {
             color: #ffffff;
-            font-weight: 400;
-            margin-bottom: 30px;
-            text-transform: uppercase;
+            text-decoration: none;
         }
-
-        /* 미니멀 다국어 스위처 */
-        .lang-switcher {
+        nav ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
             display: flex;
-            justify-content: center;
-            gap: 15px;
-            margin-bottom: 50px;
+            flex-direction: column;
+            gap: 25px;
+            align-items: center;
         }
-
-        .lang-btn {
-            font-size: 0.7rem;
-            letter-spacing: 0.1rem;
-            color: #444444;
-            cursor: pointer;
-            transition: color 0.3s;
-            font-weight: 400;
-        }
-
-        .lang-btn.active, .lang-btn:hover {
-            color: #ffffff;
-        }
-
-        /* 본문 스타일 및 전환 애니메이션 */
-        .history-body {
-            font-size: 0.85rem;
-            letter-spacing: 0.08rem;
-            line-height: 2.2;
-            color: #999999;
-            font-weight: 300;
-            display: none;
-            opacity: 0;
-            transition: opacity 0.5s ease;
-        }
-
-        /* 활성화된 언어 본문만 노출 */
-        .history-body.active {
-            display: block;
-            opacity: 1;
-        }
-
-        .history-body p {
-            margin: 0 0 35px 0;
-        }
-
-        .history-slogan {
-            margin-top: 50px;
-            font-size: 0.8rem;
-            letter-spacing: 0.15rem;
+        nav ul li a {
             color: #555555;
-            font-style: italic;
-        }
-
-        /* 하단 뒤로가기 */
-        .back-home {
-            font-size: 0.75rem;
-            letter-spacing: 0.1rem;
-        }
-        
-        .back-home a {
-            color: #444444;
             text-decoration: none;
-            transition: color 0.3s;
+            font-size: 0.8rem;
+            letter-spacing: 0.3rem;
+            transition: color 0.3s ease;
+            font-weight: 300;
+            text-transform: uppercase;
         }
-        
-        .back-home a:hover {
+        nav ul li a:hover {
             color: #ffffff;
+        }
+        footer {
+            font-size: 0.65rem;
+            letter-spacing: 0.1rem;
+            color: #333333;
+            margin-bottom: 20px;
         }
     </style>
 </head>
 <body>
 
-    <div class="header-logo"><a href="index.html">SYRINX</a></div>
+    <div class="logo"><a href="index.html">SYRINX</a></div>
 
-    <div class="history-container">
-        <div class="history-title">Brand History</div>
-        
-        <div class="lang-switcher">
-            <span class="lang-btn active" onclick="changeLang('en')">EN</span>
-            <span class="lang-btn" onclick="changeLang('ko')">KR</span>
-            <span class="lang-btn" onclick="changeLang('fr')">FR</span>
-            <span class="lang-btn" onclick="changeLang('it')">IT</span>
-            <span class="lang-btn" onclick="changeLang('es')">ES</span>
-        </div>
+    <nav>
+        <ul>
+            <li><a href="brand-history.html">Brand History</a></li>
+            <li><a href="store.html">Store</a></li>
+        </ul>
+    </nav>
 
-        <div id="lang-en
+    <footer>
+        &copy; 2026 SYRINX. All Rights Reserved.
+    </footer>
+
+</body>
+</html>
