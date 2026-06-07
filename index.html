@@ -20,12 +20,14 @@
             box-sizing: border-box;
         }
 
-        /* 메인 영역 (중앙 로고) */
+        /* 메인 영역 (중앙 로고 + 커밍순) */
         .main-content {
             flex: 1;
             display: flex;
+            flex-direction: column;
             justify-content: center;
             align-items: center;
+            text-align: center;
         }
         
         .brand-logo {
@@ -33,6 +35,15 @@
             letter-spacing: 0.6rem;
             font-weight: 300;
             text-transform: uppercase;
+            margin-bottom: 20px; /* 로고와 커밍순 멘트 사이 간격 */
+        }
+
+        .coming-soon-text {
+            font-size: 0.8rem;
+            letter-spacing: 0.2rem;
+            color: #888888; /* 차분한 회색 */
+            text-transform: uppercase;
+            font-weight: 300;
         }
 
         /* 하단 푸터 영역 */
@@ -45,11 +56,11 @@
             gap: 25px;
         }
 
-        /* 메뉴 스타일 (살짝 회색조) */
+        /* 압축된 메뉴 스타일 */
         .footer-menu {
             display: flex;
             justify-content: center;
-            gap: 24px;
+            gap: 30px; /* 메뉴 사이 간격 살짝 넓힘 */
             list-style: none;
             padding: 0;
             margin: 0;
@@ -69,7 +80,7 @@
             color: #ffffff; /* 마우스 올리면 흰색 */
         }
 
-        /* 이메일 & 인스타 정보 스타일 */
+        /* 이메일 & 인스타 정보 스타일 (CONTACT 통합 영역) */
         .footer-info {
             display: flex;
             flex-direction: column;
@@ -94,17 +105,20 @@
 
     <div class="main-content">
         <div class="brand-logo">SYRINX</div>
+        <div class="coming-soon-text">OPENING JULY 2024<br>(Coming Soon)</div>
     </div>
 
     <footer>
         <ul class="footer-menu">
-            <li><a href="#">ARCHIVE</a></li>
-            <li><a href="#">BOOKS</a></li>
+            <li><a href="#">BRAND HISTORY</a></li>
             <li><a href="#">STORE</a></li>
-            <li><a href="#">JOURNAL</a></li>
-            <li><a href="#">CONTACT</a></li>
         </ul>
 
         <div class="footer-info">
             <a href="mailto:syrnxofficial@gmail.com">syrnxofficial@gmail.com</a>
-            <a href="https://instagram.
+            <a href="https://instagram.com/syrinx.official" target="_blank">@syrinx.official</a>
+        </div>
+    </footer>
+
+</body>
+</html>
