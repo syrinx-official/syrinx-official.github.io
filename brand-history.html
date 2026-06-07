@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SYRINX - Brand History</title>
+    <style>
+        body {
+            background-color: #000000;
+            color: #ffffff;
+            font-family: 'Helvetica Neue', Arial, sans-serif;
+            margin: 0;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            align-items: center;
+            padding: 80px 20px;
+            box-sizing: border-box;
+        }
+
+        /* 상단 헤더 로고 */
+        .header-logo {
+            font-size: 1.1rem;
+            letter-spacing: 0.5rem;
+            font-weight: 300;
+            text-transform: uppercase;
+            color: #444444;
+        }
+
+        /* 컨테이너 및 타이틀 */
+        .history-container {
+            max-width: 520px;
+            width: 100%;
+            text-align: center;
+            margin: 40px 0;
+        }
+
+        .history-title {
+            font-size: 1rem;
+            letter-spacing: 0.3rem;
+            color: #ffffff;
+            font-weight: 400;
+            margin-bottom: 30px;
+            text-transform: uppercase;
+        }
+
+        /* 미니멀 다국어 스위처 */
+        .lang-switcher {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 50px;
+        }
+
+        .lang-btn {
+            font-size: 0.7rem;
+            letter-spacing: 0.1rem;
+            color: #444444;
+            cursor: pointer;
+            transition: color 0.3s;
+            font-weight: 400;
+        }
+
+        .lang-btn.active, .lang-btn:hover {
+            color: #ffffff; /* 활성화되거나 마우스 올리면 흰색 */
+        }
+
+        /* 본문 스타일 및 전환 애니메이션 */
+        .history-body {
+            font-size: 0.85rem;
+            letter-spacing: 0.08rem;
+            line-height: 2.2;
+            color: #999999;
+            font-weight: 300;
+            display: none; /* 기본적으로 모두 숨김 */
+            opacity: 0;
+            transition: opacity 0.5s ease;
+        }
+
+        /* 활성화된 언어 본문만 노출 */
+        .history-body.active {
+            display: block;
+            opacity: 1;
+        }
+
+        .history-body p {
+            margin: 0 0 35px 0;
+        }
+
+        .history-slogan {
+            margin-top: 50px;
+            font-size: 0.8rem;
+            letter-spacing: 0.15rem;
+            color: #555555;
+            font-style: italic;
+        }
+
+        /* 하단 뒤로가기 */
+        .back-home {
+            font-size: 0.75rem;
+            letter-spacing: 0.1rem;
+        }
+        
+        .back-home a {
+            color: #444444;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+        
+        .back-home a:hover {
+            color: #ffffff;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="header-logo">SYRINX</div>
+
+    <div class="history-container">
+        <div class="history-title">Brand History</div>
+        
+        <div class="lang-switcher">
+            <span class="lang-btn active" onclick="changeLang('en')">EN</span>
+            <span class="lang-btn" onclick="changeLang('ko')">KR</span>
+            <span class="lang-btn" onclick="changeLang('fr')">FR</span>
+            <span class="lang-btn" onclick="changeLang('it')">IT</span>
+            <span class="lang-btn" onclick="changeLang('es')">ES</span>
+        </div>
+
+        <div id="lang-en" class="history-body active">
+            <p>Looking towards a span of 100 years.</p>
+            <p>SYRINX believes in values that accumulate over time,<br>rather than those rapidly created and consumed.</p>
+            <p>A place where a single record, a single book, and a single object<br>acquire new meaning through the passage of time.</p>
+            <p>Choosing essence over trend, and time over the fleeting moment,<br>we slowly accumulate the solid fragments of life.</p>
+            <div class="history-slogan">Collected fragments of a constructive life.</div>
+        </div>
+
+        <div id="lang-ko" class="history-body">
+            <p>100년의 시간을 바라보며.</p>
+            <p>SYRINX는 빠르게 소비되는 것보다<br>오랜 시간 축적되는 가치를 믿습니다.</p>
+            <p>하나의 기록, 하나의 책, 하나의 오브젝트가<br>시간 속에서 새로운 의미를 획득하는 곳.</p>
+            <p>유행보다 본질을, 순간보다 시간을 선택하며<br>삶의 단단한 흔적들을 천천히 쌓아갑니다.</p>
+            <div class="history-slogan">Collected fragments of a constructive life.</div>
+        </div>
+
+        <div id="lang-fr" class="history-body">
+            <p>En regardant vers un horizon de 100 ans.</p>
+            <p>SYRINX croit en la valeur qui s'accumule avec le temps,<br>plutôt qu'en ce qui est rapidement créé et consommé.</p>
+            <p>Un lieu où un seul enregistrement, un seul livre, un seul objet<br>acquiert un sens nouveau à travers le temps.</p>
+            <p>Choisissant l'essence plutôt que la tendance, le temps plutôt que l'instant,<br>nous construisons lentement les fragments solides de la vie.</p>
+            <div class="history-slogan">Collected fragments of a constructive life.</div>
+        </div>
+
+        <div id="lang-it" class="history-body">
+            <p>Guardando verso un arco di 100 anni.</p>
+            <p>SYRINX crede nel valore che si accumula nel tempo,<br>piuttosto che in ciò che viene rapidamente creato e consumato.</p>
+            <p>Un luogo dove un singolo record, un singolo libro, un singolo oggetto<br>acquista un nuovo significato attraverso il tempo.</p>
+            <p>Scegliendo l'essenza rispetto alla tendenza, il tempo rispetto al momento,<br>costruiamo lentamente i frammenti solidi della vita.</p>
+            <div class="history-slogan">Collected fragments of a constructive life.</div>
+        </div>
+
+        <div id="lang-es" class="history-body">
+            <p>Mirando hacia un horizonte de 100 años.</p>
+            <p>SYRINX cree en el valor que se acumula con el tiempo,<br>más que en aquello que se crea y se consume rápidamente.</p>
+            <p>Un lugar donde un solo registro, un solo libro, un solo objeto<br>adquiere un nuevo significado a través del tiempo.</p>
+            <p>Eligiendo la esencia sobre la tendencia, el tiempo sobre el momento fugaz,<br>construimos lentamente los fragmentos sólidos de la vida.</p>
+            <div class="history-slogan">Collected fragments of a constructive life.</div>
+        </div>
+    </div>
+
+    <div class="back-home">
+        <a href="index.html">← BACK TO HOME</a>
+    </div>
+
+    <script>
+        function changeLang(langCode) {
+            // 모든 본문 숨기기
+            const bodies = document.querySelectorAll('.history-body');
+            bodies.forEach(body => {
+                body.classList.remove('active');
+            });
+
+            // 모든 버튼 비활성화
+            const buttons = document.querySelectorAll('.lang-btn');
+            buttons.forEach(btn => {
+                btn.classList.remove('active');
+            });
+
+            // 선택한 언어 본문 및 버튼만 활성화
+            const targetBody = document.getElementById(`lang-${langCode}`);
+            if(targetBody) {
+                targetBody.classList.add('active');
+            }
+
+            // 이벤트 발생한 버튼에 active 클래스 부여를 위해 검색
+            const eventTarget = Array.from(buttons).find(btn => btn.textContent.toLowerCase() === langCode);
+            if(eventTarget) {
+                eventTarget.classList.add('active');
+            }
+        }
+    </script>
+
+</body>
+</html>
