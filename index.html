@@ -1,32 +1,115 @@
 <!DOCTYPE html>
-<html>
+<html lang="ko">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SYRINX</title>
     <style>
-        /* 링크 메뉴 스타일 구성 */
-        .menu-link {
-            color: white;
-            text-decoration: none; /* 밑줄 제거 */
-            display: block;
-            margin: 20px 0;
-            font-size: 16px;
-            letter-spacing: 2px; /* 자간을 넓혀 고급스러운 느낌 부여 */
-            opacity: 0.9;
+        /* 기본 배경 및 레이아웃 설정 */
+        body {
+            background-color: #000000;
+            color: #ffffff;
+            font-family: 'Helvetica Neue', Arial, sans-serif;
+            margin: 0;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            align-items: center;
+            padding: 60px 20px;
+            box-sizing: border-box;
+        }
+
+        /* 메인 영역 (중앙 로고만 미니멀하게 남김, 로고도 없애고 싶으시면 이 부분을 비워두셔도 됩니다) */
+        .main-content {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .brand-logo {
+            font-size: 2.2rem;
+            letter-spacing: 0.6rem;
+            font-weight: 300;
+            text-transform: uppercase;
+        }
+
+        /* 하단 푸터 영역 */
+        footer {
+            width: 100%;
+            max-width: 600px;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            gap: 25px;
+        }
+
+        /* 메뉴 스타일 (살짝 회색조로 조정) */
+        .footer-menu {
+            display: flex;
+            justify-content: center;
+            gap: 24px;
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            flex-wrap: wrap;
+        }
+
+        .footer-menu a {
+            color: #777777; /* 차분한 회색 */
+            text-decoration: none;
+            font-size: 0.75rem;
+            letter-spacing: 0.15rem;
+            transition: color 0.3s;
+            font-weight: 400;
+        }
+
+        .footer-menu a:hover {
+            color: #ffffff; /* 마우스 올리면 흰색으로 강조 */
+        }
+
+        /* 구글 이메일 & 인스타 정보 스타일 */
+        .footer-info {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            margin-top: 5px;
+        }
+        
+        .footer-info a {
+            color: #444444; /* 메뉴보다 더 연한 회색 */
+            text-decoration: none;
+            font-size: 0.7rem;
+            letter-spacing: 0.05rem;
+            transition: color 0.3s;
+        }
+        
+        .footer-info a:hover {
+            color: #888888;
         }
     </style>
 </head>
-<body style="background:black;color:white;text-align:center;padding-top:150px;font-family:Arial;">
+<body>
 
-    <h1>SYRINX</h1>
-    <p style="letter-spacing: 1px;">Collected fragments of a constructive life.</p>
-    
-    <hr width="300">
+    <div class="main-content">
+        <div class="brand-logo">SYRINX</div>
+    </div>
 
-    <a href="coming-soon.html" class="menu-link">ARCHIVE</a>
-    <a href="coming-soon.html" class="menu-link">BOOKS</a>
-    <a href="coming-soon.html" class="menu-link">STORE</a>
-    <a href="coming-soon.html" class="menu-link">JOURNAL</a>
-    <a href="coming-soon.html" class="menu-link">CONTACT</a>
+    <footer>
+        <ul class="footer-menu">
+            <li><a href="#">ARCHIVE</a></li>
+            <li><a href="#">BOOKS</a></li>
+            <li><a href="#">STORE</a></li>
+            <li><a href="#">JOURNAL</a></li>
+            <li><a href="#">CONTACT</a></li>
+        </ul>
+
+        <div class="footer-info">
+            <a href="mailto:tmvkfmxk97@gmail.com">tmvkfmxk97@gmail.com</a>
+            <a href="https://instagram.com/Syrinx.com" target="_blank">@Syrinx.com</a>
+        </div>
+    </footer>
 
 </body>
 </html>
