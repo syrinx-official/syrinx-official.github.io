@@ -16,35 +16,31 @@
             padding: 80px 20px 40px 20px; 
             box-sizing: border-box;
         }
-        /* 메인 로고 */
-        .header { font-size: 1.5rem; letter-spacing: 0.8rem; text-transform: uppercase; margin-bottom: 80px; text-align: center; }
+        /* 메인 로고 영역 */
+        .header { font-size: 1.5rem; letter-spacing: 0.8rem; text-transform: uppercase; margin-bottom: 120px; text-align: center; }
         
-        /* 네비게이션: STORE 먼저, HISTORY 아래로 */
-        .nav { display: flex; flex-direction: column; align-items: center; gap: 30px; margin-bottom: 100px; }
+        /* 네비게이션 영역 */
+        .nav { display: flex; flex-direction: column; align-items: center; gap: 40px; margin-bottom: auto; }
         .nav a { color: #ffffff; text-decoration: none; font-size: 0.8rem; letter-spacing: 0.2rem; transition: color 0.3s; }
         .nav a:hover { color: #888888; }
         
-        /* 하단 섹션 */
-        #footer { 
-            margin-top: auto; 
-            text-align: center; 
-            color: #ffffff; 
-            padding-top: 80px;
-        }
-        .contact-info { 
+        /* 하단 CONTACT & FOOTER */
+        #footer { text-align: center; color: #ffffff; padding-top: 80px; }
+        .contact-row { 
             display: flex; 
             justify-content: center; 
+            align-items: center; 
             gap: 20px; 
-            font-size: 0.85rem; 
+            font-size: 0.8rem; 
             color: #aaaaaa; 
             margin-top: 20px;
-            margin-bottom: 40px;
         }
         .copyright { 
             font-size: 0.7rem; 
             color: #333333; 
             letter-spacing: 0.1rem; 
             text-transform: uppercase; 
+            margin-top: 60px;
         }
     </style>
 </head>
@@ -54,13 +50,12 @@
 
     <div class="nav">
         <a href="store.html">STORE</a>
-        <a href="brand-history.html">HISTORY</a>
+        <a href="brand-history.html">BRAND HISTORY</a>
     </div>
 
     <section id="footer">
-        <h2 style="font-size: 0.7rem; letter-spacing: 0.2rem; color: #555555; text-transform: uppercase; font-weight: 400; margin: 0;">CONTACT</h2>
-        
-        <div class="contact-info">
+        <div class="contact-row">
+            <span style="color: #555555; letter-spacing: 0.1rem;">CONTACT</span>
             <span>syrinx.official@email.com</span>
             <span>@syrinx_official</span>
         </div>
