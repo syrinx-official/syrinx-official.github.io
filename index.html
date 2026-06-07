@@ -20,47 +20,36 @@
             box-sizing: border-box;
         }
 
-        /* 메인 영역 (중앙 로고 + 커밍순) */
+        /* 메인 영역 (중앙 로고만 미니멀하게 배치) */
         .main-content {
             flex: 1;
             display: flex;
-            flex-direction: column;
             justify-content: center;
             align-items: center;
-            text-align: center;
         }
         
         .brand-logo {
-            font-size: 2.2rem;
-            letter-spacing: 0.6rem;
+            font-size: 2.5rem;
+            letter-spacing: 0.7rem;
             font-weight: 300;
             text-transform: uppercase;
-            margin-bottom: 20px; /* 로고와 커밍순 멘트 사이 간격 */
-        }
-
-        .coming-soon-text {
-            font-size: 0.8rem;
-            letter-spacing: 0.2rem;
-            color: #888888; /* 차분한 회색 */
-            text-transform: uppercase;
-            font-weight: 300;
         }
 
         /* 하단 푸터 영역 */
         footer {
             width: 100%;
-            max-width: 600px;
+            max-width: 800px;
             text-align: center;
             display: flex;
             flex-direction: column;
             gap: 25px;
         }
 
-        /* 압축된 메뉴 스타일 */
+        /* 메뉴 스타일 */
         .footer-menu {
             display: flex;
             justify-content: center;
-            gap: 30px; /* 메뉴 사이 간격 살짝 넓힘 */
+            gap: 30px;
             list-style: none;
             padding: 0;
             margin: 0;
@@ -80,23 +69,30 @@
             color: #ffffff; /* 마우스 올리면 흰색 */
         }
 
-        /* 이메일 & 인스타 정보 스타일 (CONTACT 통합 영역) */
-        .footer-info {
-            display: flex;
-            flex-direction: column;
-            gap: 6px;
-            margin-top: 5px;
-        }
-        
-        .footer-info a {
-            color: #444444; /* 메뉴보다 더 연한 회색 */
-            text-decoration: none;
+        /* 컨택트 정보 스타일 (최하단) */
+        .footer-contact {
+            color: #444444; /* 메뉴보다 연한 회색 */
             font-size: 0.7rem;
             letter-spacing: 0.05rem;
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+        
+        .contact-label {
+            font-weight: 500;
+            color: #555555;
+        }
+
+        .footer-contact a {
+            color: inherit;
+            text-decoration: none;
             transition: color 0.3s;
         }
         
-        .footer-info a:hover {
+        .footer-contact a:hover {
             color: #888888;
         }
     </style>
@@ -105,18 +101,18 @@
 
     <div class="main-content">
         <div class="brand-logo">SYRINX</div>
-        <div class="coming-soon-text">OPENING JULY 2024<br>(Coming Soon)</div>
     </div>
 
     <footer>
         <ul class="footer-menu">
-            <li><a href="#">BRAND HISTORY</a></li>
-            <li><a href="#">STORE</a></li>
+            <li><a href="coming-soon.html">BRAND HISTORY</a></li>
+            <li><a href="coming-soon.html">STORE</a></li>
         </ul>
 
-        <div class="footer-info">
+        <div class="footer-contact">
+            <span class="contact-label">CONTACT:</span>
             <a href="mailto:syrnxofficial@gmail.com">syrnxofficial@gmail.com</a>
-            <a href="https://instagram.com/syrinx.official" target="_blank">@syrinx.official</a>
+            <a href="https://instagram.com/official_syrinx" target="_blank">@official_syrinx</a>
         </div>
     </footer>
 
