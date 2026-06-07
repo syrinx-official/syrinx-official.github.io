@@ -1,1 +1,16 @@
+backend:
+  name: git-gateway
+  branch: main 
 
+media_folder: "images" # 사진을 저장할 폴더
+public_folder: "images" # 사진을 불러올 경로
+
+collections:
+  - name: "product"
+    label: "Product"
+    folder: "products" # 제품 정보가 저장될 폴더
+    create: true
+    fields:
+      - {label: "Name", name: "title", widget: "string"}
+      - {label: "Image", name: "image", widget: "image"}
+      - {label: "Date", name: "date", widget: "datetime"}
