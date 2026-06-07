@@ -5,21 +5,17 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SYRINX - Store</title>
     <style>
-        body { background-color: #000000; color: #ffffff; font-family: 'Helvetica Neue', Arial, sans-serif; margin: 0; min-height: 100vh; display: flex; flex-direction: column; justify-content: space-between; align-items: center; padding: 80px 20px; box-sizing: border-box; }
-        .header-logo { font-size: 1.1rem; letter-spacing: 0.5rem; font-weight: 300; text-transform: uppercase; margin-bottom: 60px; }
-        .header-logo a { color: #444444; text-decoration: none; transition: color 0.3s ease; }
-        .header-logo a:hover { color: #ffffff; }
-        .store-container { max-width: 800px; width: 100%; margin-bottom: 60px; }
-        .section-title { font-size: 0.8rem; letter-spacing: 0.2rem; color: #555555; text-transform: uppercase; border-bottom: 1px solid #111111; padding-bottom: 10px; margin-top: 60px; margin-bottom: 40px; font-weight: 400; }
+        body { background-color: #000000; color: #ffffff; font-family: 'Helvetica Neue', Arial, sans-serif; margin: 0; padding: 80px 20px; display: flex; flex-direction: column; align-items: center; }
+        .header-logo { font-size: 1.1rem; letter-spacing: 0.5rem; margin-bottom: 60px; }
+        .header-logo a { color: #ffffff; text-decoration: none; }
+        .store-container { max-width: 800px; width: 100%; }
+        .section-title { font-size: 0.8rem; letter-spacing: 0.2rem; color: #555555; border-bottom: 1px solid #111111; padding-bottom: 10px; margin: 60px 0 40px; }
         .product-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; }
-        @media (max-width: 600px) { .product-grid { grid-template-columns: 1fr; gap: 50px; } }
-        .product-item { display: flex; flex-direction: column; align-items: flex-start; }
-        .product-info { width: 100%; margin-top: 20px; }
-        .status-label { font-size: 0.7rem; letter-spacing: 0.08rem; color: #444444; border: 1px solid #161616; padding: 6px 14px; text-transform: uppercase; cursor: default; display: inline-block; }
-        .status-label.released-month { color: #888888; border-color: #333333; }
-        .back-home { font-size: 0.75rem; letter-spacing: 0.1rem; margin-top: 40px; }
-        .back-home a { color: #444444; text-decoration: none; transition: color 0.3s; }
-        .back-home a:hover { color: #ffffff; }
+        @media (max-width: 600px) { .product-grid { grid-template-columns: 1fr; } }
+        .product-item img { width: 100%; display: block; border: 1px solid #161616; }
+        .status-label { font-size: 0.7rem; color: #444444; border: 1px solid #161616; padding: 6px 14px; display: inline-block; margin-top: 15px; }
+        .back-home { font-size: 0.75rem; margin-top: 60px; }
+        .back-home a { color: #444444; text-decoration: none; }
     </style>
 </head>
 <body>
@@ -27,36 +23,28 @@
     <div class="header-logo"><a href="index.html">SYRINX</a></div>
 
     <div class="store-container">
-        <div class="section-title">01. Archive</div>
+        <div class="section-title">ARCHIVE</div>
         <div class="product-grid">
             <div class="product-item">
-                <img src="images/book.png" alt="<img src="https://raw.githubusercontent.com/syrinx-official/syrinx-official.github.io/main/images/166428cf-d63f-4890-b91b-2cff2f36ef1d.png" alt="SYRINX ARCHIVE" style="width:100%; display:block;">
-                <div class="product-info">
-                    <span class="status-label released-month">COMING IN JULY</span>
-                </div>
+                <img src="images/book.png" alt="Archive">
+                <span class="status-label">COMING IN JULY</span>
             </div>
         </div>
 
-        <div class="section-title">02. Apparel</div>
+        <div class="section-title">APPAREL</div>
         <div class="product-grid">
             <div class="product-item">
-                <img src="images/tshirt.png" alt="SYRINX APPAREL" style="width:100%; display:block;">
-                <div class="product-info">
-                    <span class="status-label">COMING SOON</span>
-                </div>
+                <img src="images/tshirt.png" alt="Apparel">
+                <span class="status-label">COMING SOON</span>
             </div>
             <div class="product-item">
-                <img src="images/cap.png" alt="SYRINX APPAREL" style="width:100%; display:block;">
-                <div class="product-info">
-                    <span class="status-label">COMING SOON</span>
-                </div>
+                <img src="images/cap.png" alt="Apparel">
+                <span class="status-label">COMING SOON</span>
             </div>
         </div>
     </div>
 
-    <div class="back-home">
-        <a href="index.html">← BACK TO HOME</a>
-    </div>
+    <div class="back-home"><a href="index.html">← BACK TO HOME</a></div>
 
 </body>
 </html>
