@@ -94,3 +94,25 @@
                     for(let a=0; a<Math.PI*2; a+=0.2) {
                         let x = R * Math.cos(a), y = R * Math.sin(a);
                         let y1 = y * Math.cos(orb.rx), z1 = y * Math.sin(orb.rx);
+                        let x2 = x * Math.cos(orb.rz) - y1 * Math.sin(orb.rz);
+                        let y2 = x * Math.sin(orb.rz) + y1 * Math.cos(orb.rz);
+                        a === 0 ? ctx.moveTo(cx + x2, cy + y2) : ctx.lineTo(cx + x2, cy + y2);
+                    }
+                    ctx.stroke();
+                });
+            }
+            t++; requestAnimationFrame(frame);
+        }
+        frame();
+
+        document.querySelectorAll('nav a').forEach(link => {
+            link.addEventListener('click', function(e) {
+                e.preventDefault();
+                if(isWarping) return;
+                isWarping = true;
+                setTimeout(() => { window.location.href = this.href; }, 2000);
+            });
+        });
+    </script>
+</body>
+</html>
