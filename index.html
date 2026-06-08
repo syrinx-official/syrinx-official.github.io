@@ -9,42 +9,67 @@
             background-color: #000000; 
             color: #ffffff; 
             font-family: 'Helvetica Neue', Arial, sans-serif; 
-            margin: 0; 
-            min-height: 100vh; 
-            display: flex; 
-            flex-direction: column; 
+            margin: 0; min-height: 100vh; 
+            display: flex; flex-direction: column; 
             padding: 80px 20px 40px 20px; 
             box-sizing: border-box;
+            position: relative; overflow-x: hidden;
         }
-        /* 메인 로고 영역 */
-        .header { font-size: 1.5rem; letter-spacing: 0.8rem; text-transform: uppercase; margin-bottom: 120px; text-align: center; }
-        
-        /* 네비게이션 영역 */
-        .nav { display: flex; flex-direction: column; align-items: center; gap: 40px; margin-bottom: auto; }
+
+        /* 우주 배경 효과 (반짝이는 별) */
+        body::before {
+            content: "";
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background: radial-gradient(white, rgba(255,255,255,.2) 2px, transparent 40px);
+            background-size: 550px 550px; opacity: 0.3; z-index: 0;
+        }
+
+        /* 원자 애니메이션 컨테이너 */
+        .atom-wrapper {
+            position: absolute; top: 30%; left: 50%;
+            transform: translate(-50%, -50%);
+            width: 200px; height: 200px;
+            z-index: 1;
+        }
+
+        .atom {
+            position: relative; width: 100%; height: 100%;
+            animation: spin 15s linear infinite;
+        }
+
+        .orbit {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            border: 1px solid rgba(255,255,255,0.2); border-radius: 50%;
+        }
+
+        .electron {
+            position: absolute; top: -5px; left: 50%;
+            width: 10px; height: 10px; background: #ffffff;
+            border-radius: 50%; box-shadow: 0 0 10px #ffffff;
+        }
+
+        @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+
+        /* 기존 레이아웃 유지 */
+        .header { font-size: 1.5rem; letter-spacing: 0.8rem; text-transform: uppercase; margin-bottom: 120px; text-align: center; position: relative; z-index: 2; }
+        .nav { display: flex; flex-direction: column; align-items: center; gap: 40px; margin-bottom: auto; position: relative; z-index: 2; }
         .nav a { color: #ffffff; text-decoration: none; font-size: 0.8rem; letter-spacing: 0.2rem; transition: color 0.3s; }
         .nav a:hover { color: #888888; }
-        
-        /* 하단 CONTACT & FOOTER */
-        #footer { text-align: center; color: #ffffff; padding-top: 80px; }
-        .contact-row { 
-            display: flex; 
-            justify-content: center; 
-            align-items: center; 
-            gap: 20px; 
-            font-size: 0.8rem; 
-            color: #aaaaaa; 
-            margin-top: 20px;
-        }
-        .copyright { 
-            font-size: 0.7rem; 
-            color: #333333; 
-            letter-spacing: 0.1rem; 
-            text-transform: uppercase; 
-            margin-top: 60px;
-        }
+        #footer { text-align: center; color: #ffffff; padding-top: 80px; position: relative; z-index: 2; }
+        .contact-row { display: flex; justify-content: center; align-items: center; gap: 20px; font-size: 0.8rem; color: #aaaaaa; margin-top: 20px; }
+        .copyright { font-size: 0.7rem; color: #333333; letter-spacing: 0.1rem; text-transform: uppercase; margin-top: 60px; }
     </style>
 </head>
 <body>
+
+    <div class="atom-wrapper">
+        <div class="atom">
+            <div class="orbit" style="transform: rotate(0deg);"></div>
+            <div class="orbit" style="transform: rotate(60deg);"></div>
+            <div class="orbit" style="transform: rotate(120deg);"></div>
+            <div class="electron"></div>
+        </div>
+    </div>
 
     <div class="header">SYRINX</div>
 
@@ -59,10 +84,7 @@
             <span>syrinx.official@email.com</span>
             <span>@syrinx_official</span>
         </div>
-
-        <p class="copyright">
-            &copy; 2026 SYRINX. ALL RIGHTS RESERVED.
-        </p>
+        <p class="copyright">&copy; 2026 SYRINX. ALL RIGHTS RESERVED.</p>
     </section>
 
 </body>
