@@ -12,7 +12,7 @@
             overflow: hidden; cursor: pointer; touch-action: manipulation; 
             transition: opacity 0.5s ease;
         }
-        body.is-transitioning { opacity: 0.5; } /* 페이드 아웃 전 단계 */
+        body.is-transitioning { opacity: 0.5; }
         body::before { content: ""; position: absolute; inset: 0; background: radial-gradient(white, rgba(255,255,255,.15) 1.5px, transparent 35px); background-size: 400px 400px; opacity: 0.12; z-index: 0; pointer-events: none; }
         
         .header { position: absolute; top: 60px; font-size: 1.4rem; letter-spacing: 0.8rem; text-transform: uppercase; font-weight: 300; z-index: 100; }
@@ -54,51 +54,43 @@
 
         window.onpageshow = () => { isWarping = false; document.body.style.opacity = "1"; };
 
-        function drawHourglass() {
-            const yOffset = Math.sin(t * 0.1) * 10; // 상하 움직임
-            ctx.strokeStyle = "#fff";
-            ctx.lineWidth = 2;
+        // 파도치는 수려한 모래시계 함수
+        function drawWaveHourglass() {
+            const size = 50;
+            const yOffset = Math.sin(t * 0.05) * 10; 
+            
+            ctx.strokeStyle = "rgba(255,255,255,0.4)";
+            ctx.lineWidth = 1.5;
+            
+            // 모래시계 외곽 프레임
             ctx.beginPath();
-            // 모래시계 형태
-            ctx.moveTo(cx - 15, cy - 25 + yOffset);
-            ctx.lineTo(cx + 15, cy - 25 + yOffset);
-            ctx.lineTo(cx - 15, cy + 25 + yOffset);
-            ctx.lineTo(cx + 15, cy + 25 + yOffset);
+            ctx.moveTo(cx - size, cy - size + yOffset);
+            ctx.lineTo(cx + size, cy - size + yOffset);
+            ctx.lineTo(cx - size, cy + size + yOffset);
+            ctx.lineTo(cx + size, cy + size + yOffset);
             ctx.closePath();
             ctx.stroke();
+
+            // 내부 파도 표현
+            ctx.fillStyle = "rgba(255, 255, 255, 0.15)";
+            ctx.beginPath();
+            for(let x = -size; x <= size; x++) {
+                let waveY = Math.sin(x * 0.08 + t * 0.15) * 6;
+                ctx.lineTo(cx + x, cy + yOffset + waveY);
+            }
+            ctx.lineTo(cx + size, cy + size + yOffset);
+            ctx.lineTo(cx - size, cy + size + yOffset);
+            ctx.fill();
         }
 
         function frame() {
             ctx.clearRect(0, 0, W, H);
             if (isWarping) {
-                drawHourglass();
+                drawWaveHourglass();
             } else {
                 const R = Math.min(W, H) * 0.4;
-                // 기존 궤도 애니메이션
                 [{ rx: 0.8, rz: 0.2, spd: 0.005 }, { rx: -0.6, rz: 1.1, spd: 0.004 }, { rx: 0.4, rz: -0.8, spd: 0.007 }].forEach(orb => {
                     ctx.beginPath(); ctx.strokeStyle = "#fff"; ctx.globalAlpha = 0.1;
                     for(let a=0; a<Math.PI*2; a+=0.2) {
                         let x = R * Math.cos(a), y = R * Math.sin(a);
                         let y1 = y * Math.cos(orb.rx), z1 = y * Math.sin(orb.rx);
-                        let x2 = x * Math.cos(orb.rz) - y1 * Math.sin(orb.rz);
-                        let y2 = x * Math.sin(orb.rz) + y1 * Math.cos(orb.rz);
-                        a === 0 ? ctx.moveTo(cx + x2, cy + y2) : ctx.lineTo(cx + x2, cy + y2);
-                    }
-                    ctx.stroke();
-                });
-            }
-            t++; requestAnimationFrame(frame);
-        }
-        frame();
-
-        document.querySelectorAll('nav a').forEach(link => {
-            link.addEventListener('click', function(e) {
-                e.preventDefault();
-                if(isWarping) return;
-                isWarping = true;
-                setTimeout(() => { window.location.href = this.href; }, 2000); // 로딩 시간 2초 확보
-            });
-        });
-    </script>
-</body>
-</html>
