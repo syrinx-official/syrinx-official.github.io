@@ -10,9 +10,9 @@
             background-color: #000000; color: #ffffff; font-family: 'Helvetica Neue', Arial, sans-serif; 
             height: 100dvh; display: flex; flex-direction: column; align-items: center; justify-content: center;
             overflow: hidden; cursor: pointer; touch-action: manipulation; 
-            transition: opacity 0.5s cubic-bezier(0.4, 0, 0.2, 1), filter 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            transition: opacity 0.5s ease;
         }
-        body.is-transitioning { opacity: 0; filter: blur(20px); }
+        body.is-transitioning { opacity: 0.5; } /* 페이드 아웃 전 단계 */
         body::before { content: ""; position: absolute; inset: 0; background: radial-gradient(white, rgba(255,255,255,.15) 1.5px, transparent 35px); background-size: 400px 400px; opacity: 0.12; z-index: 0; pointer-events: none; }
         
         .header { position: absolute; top: 60px; font-size: 1.4rem; letter-spacing: 0.8rem; text-transform: uppercase; font-weight: 300; z-index: 100; }
@@ -49,47 +49,44 @@
         const cv = document.getElementById('c'), ctx = cv.getContext('2d');
         let W, H, cx, cy, t = 0, isWarping = false;
 
-        function resize() { 
-            W = cv.width = cv.offsetWidth; 
-            H = cv.height = cv.offsetHeight; 
-            cx = W/2; cy = H/2; 
-        }
+        function resize() { W = cv.width = cv.offsetWidth; H = cv.height = cv.offsetHeight; cx = W/2; cy = H/2; }
         window.addEventListener('resize', resize); resize();
 
-        // 뒤로가기 시 즉각적인 복구
-        window.onpageshow = (event) => {
-            isWarping = false;
-            document.body.classList.remove('is-transitioning');
-            document.body.style.opacity = "1";
-            document.body.style.filter = "blur(0px)";
-        };
+        window.onpageshow = () => { isWarping = false; document.body.style.opacity = "1"; };
 
-        function getOrbitPt(r, a, tx, tz) {
-            let x = r * Math.cos(a), y = r * Math.sin(a);
-            let y1 = y * Math.cos(tx), z1 = y * Math.sin(tx);
-            let x2 = x * Math.cos(tz) - y1 * Math.sin(tz), y2 = x * Math.sin(tz) + y1 * Math.cos(tz);
-            return { x: cx + x2, y: cy + y2, z: z1 };
+        function drawHourglass() {
+            const yOffset = Math.sin(t * 0.1) * 10; // 상하 움직임
+            ctx.strokeStyle = "#fff";
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            // 모래시계 형태
+            ctx.moveTo(cx - 15, cy - 25 + yOffset);
+            ctx.lineTo(cx + 15, cy - 25 + yOffset);
+            ctx.lineTo(cx - 15, cy + 25 + yOffset);
+            ctx.lineTo(cx + 15, cy + 25 + yOffset);
+            ctx.closePath();
+            ctx.stroke();
         }
 
-        const orbitSpecs = [{ rx: 0.8, rz: 0.2, spd: 0.005, color: '#fff' }, { rx: -0.6, rz: 1.1, spd: 0.004, color: '#fff' }, { rx: 0.4, rz: -0.8, spd: 0.007, color: '#fff' }];
-
         function frame() {
-            if (isWarping) return;
             ctx.clearRect(0, 0, W, H);
-            const R = Math.min(W, H) * 0.4;
-            orbitSpecs.forEach(orb => {
-                ctx.beginPath();
-                ctx.strokeStyle = orb.color; ctx.globalAlpha = 0.1;
-                for(let a=0; a<Math.PI*2; a+=0.2) {
-                    let p = getOrbitPt(R, a, orb.rx, orb.rz);
-                    a === 0 ? ctx.moveTo(p.x, p.y) : ctx.lineTo(p.x, p.y);
-                }
-                ctx.stroke();
-                let pt = getOrbitPt(R, (t * orb.spd), orb.rx, orb.rz);
-                ctx.globalAlpha = 1;
-                ctx.fillStyle = "#fff";
-                ctx.beginPath(); ctx.arc(pt.x, pt.y, 2, 0, Math.PI*2); ctx.fill();
-            });
+            if (isWarping) {
+                drawHourglass();
+            } else {
+                const R = Math.min(W, H) * 0.4;
+                // 기존 궤도 애니메이션
+                [{ rx: 0.8, rz: 0.2, spd: 0.005 }, { rx: -0.6, rz: 1.1, spd: 0.004 }, { rx: 0.4, rz: -0.8, spd: 0.007 }].forEach(orb => {
+                    ctx.beginPath(); ctx.strokeStyle = "#fff"; ctx.globalAlpha = 0.1;
+                    for(let a=0; a<Math.PI*2; a+=0.2) {
+                        let x = R * Math.cos(a), y = R * Math.sin(a);
+                        let y1 = y * Math.cos(orb.rx), z1 = y * Math.sin(orb.rx);
+                        let x2 = x * Math.cos(orb.rz) - y1 * Math.sin(orb.rz);
+                        let y2 = x * Math.sin(orb.rz) + y1 * Math.cos(orb.rz);
+                        a === 0 ? ctx.moveTo(cx + x2, cy + y2) : ctx.lineTo(cx + x2, cy + y2);
+                    }
+                    ctx.stroke();
+                });
+            }
             t++; requestAnimationFrame(frame);
         }
         frame();
@@ -99,20 +96,9 @@
                 e.preventDefault();
                 if(isWarping) return;
                 isWarping = true;
-                if(audioCtx) audioCtx.resume();
-                
-                document.body.classList.add('is-transitioning');
-                setTimeout(() => { window.location.href = this.href; }, 500);
+                setTimeout(() => { window.location.href = this.href; }, 2000); // 로딩 시간 2초 확보
             });
         });
-
-        let audioCtx;
-        function playSound() {
-            if (audioCtx) return;
-            audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-            // 생략된 사운드 로직...
-        }
-        document.addEventListener('click', playSound, { once: true });
     </script>
 </body>
 </html>
