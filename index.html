@@ -46,6 +46,15 @@
         function resize() { W = cv.width = cv.offsetWidth; H = cv.height = cv.offsetHeight; cx = W/2; cy = H/2; }
         window.addEventListener('resize', resize); resize();
 
+        // 뒤로가기(BFCache) 시 상태 초기화
+        window.addEventListener('pageshow', (event) => {
+            if (event.persisted || performance.getEntriesByType("navigation")[0]?.type === "back_forward") {
+                isWarping = false;
+                document.body.style.transition = "none";
+                document.body.style.backgroundColor = "#000000";
+            }
+        });
+
         function getOrbitPt(r, a, tx, tz) {
             let x = r * Math.cos(a), y = r * Math.sin(a);
             let y1 = y * Math.cos(tx), z1 = y * Math.sin(tx);
@@ -78,44 +87,37 @@
         }
         frame();
 
-       // 1. 페이지 전환 워프 애니메이션
+        // 1. 페이지 전환 워프 애니메이션
         document.querySelectorAll('nav a').forEach(link => {
             link.addEventListener('click', function(e) {
                 e.preventDefault();
                 if(isWarping) return;
+                
+                if(audioCtx) audioCtx.resume();
+                
                 isWarping = true;
                 const target = this.href;
-
-                // 배경 전환을 더 천천히 (1.5초)
                 document.body.style.transition = "background 1.5s ease";
                 document.body.style.backgroundColor = "#ffffff";
                 
                 let warpSpeed = 1.0;
                 function warp() {
-                    // 수렴 속도를 일정하게 더해줌 (곱하기보다 훨씬 부드러움)
                     warpSpeed += 0.5; 
-                    
                     ctx.fillStyle = 'rgba(0,0,0,0.1)';
                     ctx.fillRect(0, 0, W, H);
-                    
                     ctx.shadowBlur = 10;
                     ctx.shadowColor = "white";
                     ctx.fillStyle = "white";
                     ctx.beginPath();
-                    // 중심점으로 모이는 궤적 크기 조절
                     ctx.arc(cx, cy, 3 * warpSpeed, 0, Math.PI * 2);
                     ctx.fill();
-
-                    // 애니메이션 지속 시간 늘림 (150까지 도달해야 이동)
-                    if (warpSpeed < 150) {
-                        requestAnimationFrame(warp);
-                    } else {
-                        window.location.href = target;
-                    }
+                    if (warpSpeed < 150) requestAnimationFrame(warp);
+                    else window.location.href = target;
                 }
                 warp();
             });
         });
+
         // 2. 사운드 시스템
         let audioCtx;
         function playSound() {
@@ -138,7 +140,8 @@
             }
             ping();
         }
-        document.addEventListener('click', () => { if(!audioCtx) playSound(); else audioCtx.resume(); }, { once: true });
+        document.addEventListener('touchstart', () => { playSound(); }, { once: true });
+        document.addEventListener('click', () => { playSound(); }, { once: true });
     </script>
 </body>
 </html>
