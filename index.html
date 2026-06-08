@@ -11,13 +11,10 @@
             height: 100dvh; display: flex; flex-direction: column; align-items: center; justify-content: center;
             overflow: hidden; cursor: pointer; touch-action: manipulation; transition: all 0.8s ease;
         }
-        /* 워프 시 색상 반전 효과 */
         body.is-warping { background-color: #ffffff; color: #000000; }
-        
         body::before { content: ""; position: absolute; inset: 0; background: radial-gradient(white, rgba(255,255,255,.15) 1.5px, transparent 35px); background-size: 400px 400px; opacity: 0.12; z-index: 0; pointer-events: none; }
         
         .header { position: absolute; top: 60px; font-size: 1.4rem; letter-spacing: 0.8rem; text-transform: uppercase; font-weight: 300; z-index: 100; pointer-events: none; }
-        .main-content { display: flex; justify-content: center; align-items: center; width: 100%; height: 100%; z-index: 10; position: relative; }
         .canvas-wrap { position: absolute; width: 100%; height: 100%; z-index: 5; pointer-events: none; }
         canvas { width: 100%; height: 100%; display: block; }
         
@@ -32,13 +29,11 @@
 </head>
 <body>
     <div class="header">SYRINX</div>
-    <div class="main-content">
-        <div class="canvas-wrap"><canvas id="c"></canvas></div>
-        <nav class="nav">
-            <a href="store.html">STORE</a>
-            <a href="brand-history.html">BRAND HISTORY</a>
-        </nav>
-    </div>
+    <div class="canvas-wrap"><canvas id="c"></canvas></div>
+    <nav class="nav">
+        <a href="store.html">STORE</a>
+        <a href="brand-history.html">BRAND HISTORY</a>
+    </nav>
     <section id="footer">
         <div class="contact-row">
             <span>CONTACT</span> <span>syrinx.official@email.com</span> <span>@syrinx_official</span>
@@ -54,6 +49,7 @@
         function resize() { W = cv.width = cv.offsetWidth; H = cv.height = cv.offsetHeight; cx = W/2; cy = H/2; }
         window.addEventListener('resize', resize); resize();
 
+        // 소리 초기화 및 루프 시작
         function initAudio() {
             if (audioCtx) return;
             audioCtx = new (window.AudioContext || window.webkitAudioContext)();
@@ -64,42 +60,40 @@
 
         function playAmbientSound() {
             if (!audioCtx) return;
-            const osc = audioCtx.createOscillator(); const g = audioCtx.createGain();
-            osc.frequency.value = 200 + Math.random() * 100;
-            g.gain.setValueAtTime(0, audioCtx.currentTime);
-            g.gain.linearRampToValueAtTime(0.05, audioCtx.currentTime + 1);
-            g.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 3);
+            const osc = audioCtx.createOscillator(); 
+            const g = audioCtx.createGain();
+            // 앰비언트 느낌의 낮은 주파수
+            osc.type = 'triangle';
+            osc.frequency.value = 100 + Math.sin(t * 0.01) * 20;
+            g.gain.value = 0.03;
             osc.connect(g); g.connect(masterGain);
-            osc.start(); osc.stop(audioCtx.currentTime + 3);
-            setTimeout(playAmbientSound, 4000);
+            osc.start(); osc.stop(audioCtx.currentTime + 0.1);
+            setTimeout(playAmbientSound, 100);
         }
 
-        window.onpageshow = () => { isWarping = false; document.body.classList.remove('is-warping'); };
-
-        function drawWaveHourglass() {
-            const size = 60, yOffset = Math.sin(t * 0.05) * 15;
-            // 반전 모드일 때 색상 변경
-            ctx.strokeStyle = isWarping ? "#000" : "#fff"; 
-            ctx.lineWidth = 1.5;
+        function drawElegantHourglass() {
+            const size = 50, pulse = Math.sin(t * 0.05) * 5;
+            ctx.strokeStyle = isWarping ? "#000" : "#fff"; ctx.lineWidth = 2;
+            
+            // 세련된 곡선 모래시계 실루엣
             ctx.beginPath();
-            ctx.moveTo(cx - size, cy - size + yOffset); ctx.lineTo(cx + size, cy - size + yOffset);
-            ctx.lineTo(cx - size, cy + size + yOffset); ctx.lineTo(cx + size, cy + size + yOffset);
+            ctx.moveTo(cx - size, cy - size);
+            ctx.quadraticCurveTo(cx, cy - size - pulse, cx + size, cy - size);
+            ctx.lineTo(cx - size, cy + size);
+            ctx.quadraticCurveTo(cx, cy + size + pulse, cx + size, cy + size);
             ctx.closePath(); ctx.stroke();
-            ctx.fillStyle = isWarping ? "rgba(0,0,0,0.2)" : "rgba(255,255,255,0.2)";
-            ctx.beginPath();
-            for(let x = -size; x <= size; x++) {
-                ctx.lineTo(cx + x, cy + yOffset + Math.sin(x * 0.08 + t * 0.15) * 8);
-            }
-            ctx.lineTo(cx + size, cy + size + yOffset); ctx.lineTo(cx - size, cy + size + yOffset);
+            
+            // 안쪽 모래 질감
+            ctx.fillStyle = isWarping ? "rgba(0,0,0,0.1)" : "rgba(255,255,255,0.1)";
             ctx.fill();
         }
 
         function frame() {
             ctx.clearRect(0, 0, W, H);
             if (isWarping) {
-                drawWaveHourglass();
+                drawElegantHourglass();
             } else {
-                const R = Math.min(W, H) * 0.5; // 궤도 크기 확대
+                const R = Math.min(W, H) * 0.5;
                 [{rx: 0.8, rz: 0.2, spd: 0.005}, {rx: -0.6, rz: 1.1, spd: 0.004}, {rx: 0.4, rz: -0.8, spd: 0.007}].forEach(orb => {
                     ctx.beginPath(); ctx.strokeStyle = "rgba(255,255,255,0.1)";
                     for(let a=0; a<Math.PI*2; a+=0.2) {
@@ -116,15 +110,16 @@
         }
         frame();
 
+        // 첫 클릭 시 사운드 시작
         document.body.addEventListener('click', () => { initAudio(); }, { once: true });
+        
         document.querySelectorAll('nav a').forEach(link => {
             link.addEventListener('click', function(e) {
                 e.preventDefault();
                 if(isWarping) return;
                 isWarping = true;
                 document.body.classList.add('is-warping');
-                if(audioCtx) audioCtx.resume();
-                setTimeout(() => { window.location.href = this.href; }, 1000);
+                setTimeout(() => { window.location.href = this.href; }, 1200);
             });
         });
     </script>
