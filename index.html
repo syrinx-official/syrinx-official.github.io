@@ -15,10 +15,16 @@
         .nav { display: flex; flex-direction: column; align-items: center; gap: 40px; z-index: 200; }
         .nav a { color: #ffffff; text-decoration: none; font-size: 0.75rem; letter-spacing: 0.4rem; text-transform: uppercase; font-weight: 300; transition: color 0.4s; }
         .nav a:hover { color: #888; }
+        
         #footer { width: 100%; text-align: center; z-index: 100; }
-        .contact-row { display: flex; justify-content: center; align-items: center; gap: 20px; font-size: 0.65rem; color: #666; letter-spacing: 0.05rem; }
-        .copyright { font-size: 0.55rem; color: #222; margin-top: 15px; text-transform: uppercase; }
-        @media (max-width: 480px) { .header { font-size: 1.1rem; } .nav { gap: 30px; } .contact-row { flex-direction: column; gap: 8px; } }
+        .contact-row { display: flex; justify-content: center; align-items: center; gap: 15px; font-size: 0.55rem; color: #666; letter-spacing: 0.05rem; white-space: nowrap; }
+        .copyright { font-size: 0.5rem; color: #222; margin-top: 15px; text-transform: uppercase; }
+
+        @media (max-width: 480px) { 
+            .header { font-size: 1.1rem; } 
+            .nav { gap: 30px; } 
+            .contact-row { font-size: 0.5rem; gap: 8px; }
+        }
     </style>
 </head>
 <body>
@@ -52,7 +58,6 @@
             return { x: cx + x2, y: cy + y2, z: z1 };
         }
 
-        // 궤도 설정: 투명도 대폭 낮춤
         const orbitSpecs = [
             { rx: 0.8, rz: 0.2, spd: 0.007, color: 'rgba(255,255,255,0.05)' },
             { rx: -0.6, rz: 1.1, spd: 0.006, color: 'rgba(255,255,255,0.03)' },
@@ -70,7 +75,7 @@
                 }
                 ctx.closePath();
                 ctx.strokeStyle = orb.color;
-                ctx.lineWidth = 0.5; // 가늘게 설정
+                ctx.lineWidth = 0.5;
                 ctx.stroke();
 
                 let pt = getOrbitPt(R, t * orb.spd, orb.rx, orb.rz);
@@ -81,23 +86,18 @@
         }
         frame();
 
-        /* ── 고도화된 사운드 시스템 ── */
         let audioCtx;
         function playSound() {
             if (audioCtx) return;
             audioCtx = new (window.AudioContext || window.webkitAudioContext)();
             const master = audioCtx.createGain(); master.connect(audioCtx.destination);
             master.gain.value = 0.3;
-
-            // 드론 사운드
             [55, 110, 165].forEach(f => {
                 const osc = audioCtx.createOscillator();
                 const g = audioCtx.createGain();
                 osc.frequency.value = f; g.gain.value = 0.05;
                 osc.connect(g); g.connect(master); osc.start();
             });
-
-            // 글리치/핑 사운드
             function ping() {
                 if(Math.random() > 0.7) {
                     const osc = audioCtx.createOscillator();
