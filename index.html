@@ -117,5 +117,37 @@
         }
         ['click', 'touchstart'].forEach(e => document.addEventListener(e, () => { if(!audioCtx) playSound(); else audioCtx.resume(); }, { once: true }));
     </script>
+    </a>
+    /* ── 페이지 전환 워프 애니메이션 ── */
+        document.querySelectorAll('nav a').forEach(link => {
+            link.addEventListener('click', function(e) {
+                e.preventDefault();
+                const target = this.href;
+
+                // 1. 화면 전체 화이트 플래시 효과
+                document.body.style.transition = "background 0.3s ease";
+                document.body.style.backgroundColor = "#ffffff";
+                
+                // 2. 캔버스 수렴 애니메이션 (워프 효과)
+                let warpSpeed = 1.0;
+                function warp() {
+                    warpSpeed *= 1.2;
+                    ctx.fillStyle = 'rgba(0,0,0,0.2)';
+                    ctx.fillRect(0, 0, W, H);
+                    
+                    // 원자들이 중심(cx, cy)으로 빨려 들어감
+                    ctx.shadowBlur = 20;
+                    ctx.shadowColor = "white";
+                    ctx.fillStyle = "white";
+                    ctx.beginPath();
+                    ctx.arc(cx, cy, 5 * warpSpeed, 0, Math.PI * 2);
+                    ctx.fill();
+
+                    if (warpSpeed < 100) requestAnimationFrame(warp);
+                    else window.location.href = target;
+                }
+                warp();
+            });
+        });
 </body>
 </html>
