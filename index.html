@@ -49,7 +49,6 @@
         function resize() { W = cv.width = cv.offsetWidth; H = cv.height = cv.offsetHeight; cx = W/2; cy = H/2; }
         window.addEventListener('resize', resize); resize();
 
-        // 소리 초기화 및 루프 시작
         function initAudio() {
             if (audioCtx) return;
             audioCtx = new (window.AudioContext || window.webkitAudioContext)();
@@ -62,7 +61,6 @@
             if (!audioCtx) return;
             const osc = audioCtx.createOscillator(); 
             const g = audioCtx.createGain();
-            // 앰비언트 느낌의 낮은 주파수
             osc.type = 'triangle';
             osc.frequency.value = 100 + Math.sin(t * 0.01) * 20;
             g.gain.value = 0.03;
@@ -72,19 +70,15 @@
         }
 
         function drawElegantHourglass() {
-            const size = 50, pulse = Math.sin(t * 0.05) * 5;
+            const size = 60, pulse = Math.sin(t * 0.05) * 8;
             ctx.strokeStyle = isWarping ? "#000" : "#fff"; ctx.lineWidth = 2;
-            
-            // 세련된 곡선 모래시계 실루엣
             ctx.beginPath();
             ctx.moveTo(cx - size, cy - size);
             ctx.quadraticCurveTo(cx, cy - size - pulse, cx + size, cy - size);
             ctx.lineTo(cx - size, cy + size);
             ctx.quadraticCurveTo(cx, cy + size + pulse, cx + size, cy + size);
             ctx.closePath(); ctx.stroke();
-            
-            // 안쪽 모래 질감
-            ctx.fillStyle = isWarping ? "rgba(0,0,0,0.1)" : "rgba(255,255,255,0.1)";
+            ctx.fillStyle = isWarping ? "rgba(0,0,0,0.05)" : "rgba(255,255,255,0.05)";
             ctx.fill();
         }
 
@@ -93,10 +87,11 @@
             if (isWarping) {
                 drawElegantHourglass();
             } else {
-                const R = Math.min(W, H) * 0.5;
-                [{rx: 0.8, rz: 0.2, spd: 0.005}, {rx: -0.6, rz: 1.1, spd: 0.004}, {rx: 0.4, rz: -0.8, spd: 0.007}].forEach(orb => {
-                    ctx.beginPath(); ctx.strokeStyle = "rgba(255,255,255,0.1)";
-                    for(let a=0; a<Math.PI*2; a+=0.2) {
+                // 궤도 사이즈를 화면보다 훨씬 크게 설정 (화면 밖으로 나감)
+                const R = Math.max(W, H) * 0.7; 
+                [{rx: 0.8, rz: 0.2, spd: 0.003}, {rx: -0.6, rz: 1.1, spd: 0.002}, {rx: 0.4, rz: -0.8, spd: 0.004}].forEach(orb => {
+                    ctx.beginPath(); ctx.strokeStyle = "rgba(255,255,255,0.15)";
+                    for(let a=0; a<Math.PI*2; a+=0.1) {
                         let x = R * Math.cos(a + t * orb.spd), y = R * Math.sin(a + t * orb.spd);
                         let y1 = y * Math.cos(orb.rx), z1 = y * Math.sin(orb.rx);
                         let x2 = x * Math.cos(orb.rz) - y1 * Math.sin(orb.rz);
@@ -110,7 +105,6 @@
         }
         frame();
 
-        // 첫 클릭 시 사운드 시작
         document.body.addEventListener('click', () => { initAudio(); }, { once: true });
         
         document.querySelectorAll('nav a').forEach(link => {
