@@ -6,7 +6,7 @@
     <title>SYRINX</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-        body { background-color: #000000; color: #ffffff; font-family: 'Helvetica Neue', Arial, sans-serif; height: 100dvh; display: flex; flex-direction: column; align-items: center; overflow: hidden; cursor: pointer; touch-action: manipulation; position: relative; }
+        body { background-color: #000000; color: #ffffff; font-family: 'Helvetica Neue', Arial, sans-serif; height: 100dvh; display: flex; flex-direction: column; align-items: center; overflow: hidden; cursor: pointer; touch-action: manipulation; position: relative; transition: opacity 0.8s ease; }
         body::before { content: ""; position: absolute; inset: 0; background: radial-gradient(white, rgba(255,255,255,.15) 1.5px, transparent 35px); background-size: 400px 400px; opacity: 0.12; z-index: 0; pointer-events: none; }
         .header { margin-top: 60px; font-size: 1.4rem; letter-spacing: 0.8rem; text-transform: uppercase; font-weight: 300; z-index: 100; }
         .main-content { flex: 1; display: flex; justify-content: center; align-items: center; width: 100%; z-index: 10; pointer-events: none; }
@@ -18,7 +18,8 @@
         #footer { width: 100%; text-align: center; z-index: 100; padding-bottom: 30px; }
         .contact-row { display: flex; justify-content: center; align-items: center; gap: 15px; font-size: 0.55rem; color: #666; letter-spacing: 0.05rem; white-space: nowrap; }
         .copyright { font-size: 0.5rem; color: #222; margin-top: 15px; text-transform: uppercase; }
-        @media (max-width: 480px) { .header { font-size: 1.1rem; margin-top: 40px; } .nav { gap: 30px; } .contact-row { font-size: 0.5rem; gap: 8px; } #footer { padding-bottom: 20px; } }
+        /* 전환 중 텍스트 흔들림 방지 */
+        body.is-transitioning { pointer-events: none; }
     </style>
 </head>
 <body>
@@ -46,13 +47,12 @@
         function resize() { W = cv.width = cv.offsetWidth; H = cv.height = cv.offsetHeight; cx = W/2; cy = H/2; }
         window.addEventListener('resize', resize); resize();
 
-        window.addEventListener('pageshow', (event) => {
-            if (event.persisted || performance.getEntriesByType("navigation")[0]?.type === "back_forward") {
-                isWarping = false;
-                document.body.style.transition = "none";
-                document.body.style.opacity = "1";
-            }
-        });
+        // [핵심] 페이지 복원 시 흰 화면 강제 차단 및 상태 초기화
+        window.onpageshow = function(event) {
+            document.body.style.opacity = "1";
+            document.body.classList.remove('is-transitioning');
+            isWarping = false;
+        };
 
         function getOrbitPt(r, a, tx, tz) {
             let x = r * Math.cos(a), y = r * Math.sin(a);
@@ -73,9 +73,7 @@
                     let p = getOrbitPt(R, a, orb.rx, orb.rz);
                     a === 0 ? ctx.moveTo(p.x, p.y) : ctx.lineTo(p.x, p.y);
                 }
-                ctx.strokeStyle = orb.color;
-                ctx.lineWidth = 0.5;
-                ctx.stroke();
+                ctx.strokeStyle = orb.color; ctx.lineWidth = 0.5; ctx.stroke();
                 let irregularAngle = (t * orb.spd) + Math.sin(t * 0.02) * 0.5;
                 let pt = getOrbitPt(R, irregularAngle, orb.rx, orb.rz);
                 ctx.fillStyle = `rgba(255,255,255,${pt.z > 0 ? 0.9 : 0.3})`;
@@ -85,7 +83,7 @@
         }
         frame();
 
-        // 1. 새로운 페이지 전환 애니메이션 (Fade-out + 수렴)
+        // 1. 페이지 전환 애니메이션
         document.querySelectorAll('nav a').forEach(link => {
             link.addEventListener('click', function(e) {
                 e.preventDefault();
@@ -95,13 +93,10 @@
                 isWarping = true;
                 const target = this.href;
                 
-                // 0.8초 동안 화면 페이드 아웃
-                document.body.style.transition = "opacity 0.8s ease";
+                document.body.classList.add('is-transitioning');
                 document.body.style.opacity = "0";
                 
-                setTimeout(() => {
-                    window.location.href = target;
-                }, 800);
+                setTimeout(() => { window.location.href = target; }, 800);
             });
         });
 
@@ -127,8 +122,8 @@
             }
             ping();
         }
-        document.addEventListener('touchstart', () => { playSound(); }, { once: true });
-        document.addEventListener('click', () => { playSound(); }, { once: true });
+        document.addEventListener('touchstart', playSound, { once: true });
+        document.addEventListener('click', playSound, { once: true });
     </script>
 </body>
 </html>
