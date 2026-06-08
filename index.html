@@ -6,140 +6,30 @@
     <title>SYRINX</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-        
-        body {
-            background-color: #000000;
-            color: #ffffff;
-            font-family: 'Helvetica Neue', Arial, sans-serif;
-            height: 100vh;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between; /* 상-중-하 배치 */
-            align-items: center;
-            padding: 60px 20px 30px;
-            overflow: hidden;
-            cursor: pointer;
-        }
-
-        /* 우주 배경 먼지 효과 */
-        body::before {
-            content: "";
-            position: absolute;
-            inset: 0;
-            background: radial-gradient(white, rgba(255,255,255,.15) 1.5px, transparent 35px);
-            background-size: 400px 400px;
-            opacity: 0.12;
-            z-index: 0;
-        }
-
-        /* 상단 로고 (위치 고정) */
-        .header {
-            font-size: 1.4rem;
-            letter-spacing: 0.8rem;
-            text-transform: uppercase;
-            font-weight: 300;
-            z-index: 100;
-            transition: opacity 0.5s;
-        }
-
-        /* 중앙 영역 (메뉴 + 원자) */
-        .main-content {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            width: 100%;
-            height: 100%;
-            z-index: 10;
-        }
-
-        /* 원자 캔버스 - 모바일 대응 크기 */
-        .canvas-wrap {
-            position: absolute;
-            width: 120vw; /* 모바일에서 더 크게 보이도록 */
-            height: 120vw;
-            max-width: 850px;
-            max-height: 850px;
-            pointer-events: none;
-            z-index: 5;
-        }
-        
-        canvas {
-            width: 100%;
-            height: 100%;
-            opacity: 0.8;
-        }
-
-        /* 네비게이션 (화면 정중앙 배치) */
-        .nav {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 40px;
-            z-index: 200;
-        }
-
-        .nav a {
-            color: #ffffff;
-            text-decoration: none;
-            font-size: 0.75rem;
-            letter-spacing: 0.4rem;
-            text-transform: uppercase;
-            font-weight: 300;
-            transition: color 0.4s, filter 0.4s;
-            white-space: nowrap;
-        }
-        .nav a:hover { color: #888; filter: blur(1px); }
-
-        /* 하단 푸터 */
-        #footer {
-            width: 100%;
-            text-align: center;
-            z-index: 100;
-        }
-        .contact-row {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 20px;
-            font-size: 0.65rem;
-            color: #666;
-            letter-spacing: 0.05rem;
-        }
-        .copyright {
-            font-size: 0.55rem;
-            color: #222;
-            letter-spacing: 0.12rem;
-            margin-top: 15px;
-            text-transform: uppercase;
-        }
-
-        /* 모바일 텍스트 크기 미세 조정 */
-        @media (max-width: 480px) {
-            .header { font-size: 1.1rem; letter-spacing: 0.6rem; }
-            .nav { gap: 30px; }
-            .contact-row { flex-direction: column; gap: 8px; }
-        }
+        body { background-color: #000000; color: #ffffff; font-family: 'Helvetica Neue', Arial, sans-serif; height: 100vh; display: flex; flex-direction: column; justify-content: space-between; align-items: center; padding: 60px 20px 30px; overflow: hidden; cursor: pointer; }
+        body::before { content: ""; position: absolute; inset: 0; background: radial-gradient(white, rgba(255,255,255,.15) 1.5px, transparent 35px); background-size: 400px 400px; opacity: 0.12; z-index: 0; }
+        .header { font-size: 1.4rem; letter-spacing: 0.8rem; text-transform: uppercase; font-weight: 300; z-index: 100; }
+        .main-content { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); display: flex; justify-content: center; align-items: center; width: 100%; height: 100%; z-index: 10; }
+        .canvas-wrap { position: absolute; width: 120vw; height: 120vw; max-width: 850px; max-height: 850px; pointer-events: none; z-index: 5; }
+        canvas { width: 100%; height: 100%; opacity: 0.8; }
+        .nav { display: flex; flex-direction: column; align-items: center; gap: 40px; z-index: 200; }
+        .nav a { color: #ffffff; text-decoration: none; font-size: 0.75rem; letter-spacing: 0.4rem; text-transform: uppercase; font-weight: 300; transition: color 0.4s; }
+        .nav a:hover { color: #888; }
+        #footer { width: 100%; text-align: center; z-index: 100; }
+        .contact-row { display: flex; justify-content: center; align-items: center; gap: 20px; font-size: 0.65rem; color: #666; letter-spacing: 0.05rem; }
+        .copyright { font-size: 0.55rem; color: #222; margin-top: 15px; text-transform: uppercase; }
+        @media (max-width: 480px) { .header { font-size: 1.1rem; } .nav { gap: 30px; } .contact-row { flex-direction: column; gap: 8px; } }
     </style>
 </head>
 <body>
-
     <div class="header">SYRINX</div>
-
     <div class="main-content">
-        <div class="canvas-wrap">
-            <canvas id="c"></canvas>
-        </div>
-
+        <div class="canvas-wrap"><canvas id="c"></canvas></div>
         <nav class="nav">
             <a href="store.html">STORE</a>
             <a href="brand-history.html">BRAND HISTORY</a>
         </nav>
     </div>
-
     <section id="footer">
         <div class="contact-row">
             <span style="color: #444;">CONTACT</span>
@@ -150,113 +40,80 @@
     </section>
 
     <script>
-        /* ── 모바일 최적화 원자 애니메이션 ── */
-        const cv = document.getElementById('c');
-        const ctx = cv.getContext('2d');
-        let W, H, cx, cy;
-        let t = 0;
+        const cv = document.getElementById('c'), ctx = cv.getContext('2d');
+        let W, H, cx, cy, t = 0;
+        function resize() { W = cv.width = cv.offsetWidth; H = cv.height = cv.offsetHeight; cx = W/2; cy = H/2; }
+        window.addEventListener('resize', resize); resize();
 
-        function resize() {
-            W = cv.width = cv.offsetWidth;
-            H = cv.height = cv.offsetHeight;
-            cx = W / 2;
-            cy = H / 2;
-        }
-        window.addEventListener('resize', resize);
-        resize();
-
-        // 3D 회전 로직
-        function getOrbitPt(radius, angle, tiltX, tiltZ) {
-            let x = radius * Math.cos(angle);
-            let y = radius * Math.sin(angle);
-            
-            // X축 기울기
-            let y1 = y * Math.cos(tiltX);
-            let z1 = y * Math.sin(tiltX);
-            
-            // Z축 회전
-            let x2 = x * Math.cos(tiltZ) - y1 * Math.sin(tiltZ);
-            let y2 = x * Math.sin(tiltZ) + y1 * Math.cos(tiltZ);
-            
+        function getOrbitPt(r, a, tx, tz) {
+            let x = r * Math.cos(a), y = r * Math.sin(a);
+            let y1 = y * Math.cos(tx), z1 = y * Math.sin(tx);
+            let x2 = x * Math.cos(tz) - y1 * Math.sin(tz), y2 = x * Math.sin(tz) + y1 * Math.cos(tz);
             return { x: cx + x2, y: cy + y2, z: z1 };
         }
 
+        // 궤도 설정: 투명도 대폭 낮춤
         const orbitSpecs = [
-            { rx: 0.8, rz: 0.2, spd: 0.015, color: 'rgba(255,255,255,0.12)' },
-            { rx: -0.6, rz: 1.1, spd: 0.012, color: 'rgba(255,255,255,0.08)' },
-            { rx: 0.4, rz: -0.8, spd: 0.018, color: 'rgba(255,255,255,0.1)' }
+            { rx: 0.8, rz: 0.2, spd: 0.007, color: 'rgba(255,255,255,0.05)' },
+            { rx: -0.6, rz: 1.1, spd: 0.006, color: 'rgba(255,255,255,0.03)' },
+            { rx: 0.4, rz: -0.8, spd: 0.009, color: 'rgba(255,255,255,0.04)' }
         ];
 
         function frame() {
             ctx.clearRect(0, 0, W, H);
-            const dynamicR = Math.min(W, H) * 0.42;
-
-            orbitSpecs.forEach((orb, i) => {
-                // 궤도 선 그리기
+            const R = Math.min(W, H) * 0.42;
+            orbitSpecs.forEach(orb => {
                 ctx.beginPath();
-                for(let a=0; a<Math.PI*2; a+=0.1) {
-                    let p = getOrbitPt(dynamicR, a, orb.rx, orb.rz);
+                for(let a=0; a<Math.PI*2; a+=0.2) {
+                    let p = getOrbitPt(R, a, orb.rx, orb.rz);
                     a === 0 ? ctx.moveTo(p.x, p.y) : ctx.lineTo(p.x, p.y);
                 }
                 ctx.closePath();
                 ctx.strokeStyle = orb.color;
-                ctx.lineWidth = 1;
+                ctx.lineWidth = 0.5; // 가늘게 설정
                 ctx.stroke();
 
-                // 전자(원자공) 그리기
-                let curAngle = t * orb.spd;
-                let pt = getOrbitPt(dynamicR, curAngle, orb.rx, orb.rz);
-                
-                let size = pt.z > 0 ? 4 : 2; // 원근감
-                let alpha = pt.z > 0 ? 0.9 : 0.3;
-
-                ctx.beginPath();
-                ctx.arc(pt.x, pt.y, size, 0, Math.PI*2);
-                ctx.fillStyle = `rgba(255,255,255,${alpha})`;
-                ctx.shadowBlur = 10;
-                ctx.shadowColor = "white";
-                ctx.fill();
-                ctx.shadowBlur = 0;
+                let pt = getOrbitPt(R, t * orb.spd, orb.rx, orb.rz);
+                ctx.fillStyle = `rgba(255,255,255,${pt.z > 0 ? 0.8 : 0.2})`;
+                ctx.beginPath(); ctx.arc(pt.x, pt.y, pt.z > 0 ? 3 : 1.5, 0, Math.PI*2); ctx.fill();
             });
-
-            t++;
-            requestAnimationFrame(frame);
+            t++; requestAnimationFrame(frame);
         }
         frame();
 
-        /* ── 사운드 시스템 (첫 터치/클릭 시 활성화) ── */
-        let audioCtx = null;
-        function playSpaceSound() {
+        /* ── 고도화된 사운드 시스템 ── */
+        let audioCtx;
+        function playSound() {
             if (audioCtx) return;
-            
-            try {
-                audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-                const master = audioCtx.createGain();
-                master.gain.setValueAtTime(0, audioCtx.currentTime);
-                master.gain.linearRampToValueAtTime(0.5, audioCtx.currentTime + 3);
-                master.connect(audioCtx.destination);
+            audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            const master = audioCtx.createGain(); master.connect(audioCtx.destination);
+            master.gain.value = 0.3;
 
-                const freqs = [55, 110.1, 164.8]; // 우주 공명 주파수
-                freqs.forEach(f => {
+            // 드론 사운드
+            [55, 110, 165].forEach(f => {
+                const osc = audioCtx.createOscillator();
+                const g = audioCtx.createGain();
+                osc.frequency.value = f; g.gain.value = 0.05;
+                osc.connect(g); g.connect(master); osc.start();
+            });
+
+            // 글리치/핑 사운드
+            function ping() {
+                if(Math.random() > 0.7) {
                     const osc = audioCtx.createOscillator();
                     const g = audioCtx.createGain();
-                    osc.type = 'sine';
-                    osc.frequency.value = f;
-                    g.gain.value = 0.15;
-                    osc.connect(g);
-                    g.connect(master);
-                    osc.start();
-                });
-            } catch(e) { console.log("Audio fail"); }
+                    osc.frequency.value = 200 + Math.random() * 800;
+                    g.gain.setValueAtTime(0, audioCtx.currentTime);
+                    g.gain.linearRampToValueAtTime(0.05, audioCtx.currentTime + 0.01);
+                    g.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 1);
+                    osc.connect(g); g.connect(master);
+                    osc.start(); osc.stop(audioCtx.currentTime + 1);
+                }
+                setTimeout(ping, 2000 + Math.random() * 3000);
+            }
+            ping();
         }
-
-        // 모든 인터랙션에 반응 (클릭, 터치)
-        ['click', 'touchstart'].forEach(type => {
-            document.addEventListener(type, () => {
-                if (!audioCtx) playSpaceSound();
-                if (audioCtx && audioCtx.state === 'suspended') audioCtx.resume();
-            }, { once: true });
-        });
+        ['click', 'touchstart'].forEach(e => document.addEventListener(e, () => { if(!audioCtx) playSound(); else audioCtx.resume(); }, { once: true }));
     </script>
 </body>
 </html>
