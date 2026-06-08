@@ -5,81 +5,47 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>SYRINX</title>
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-        body { 
-            background-color: #000000; color: #ffffff; font-family: 'Helvetica Neue', Arial, sans-serif; 
-            height: 100dvh; display: flex; flex-direction: column; align-items: center; justify-content: center;
-            overflow: hidden; cursor: pointer; touch-action: manipulation; 
-            transition: opacity 0.5s ease;
-        }
-        body.is-transitioning { opacity: 0.5; }
-        body::before { content: ""; position: absolute; inset: 0; background: radial-gradient(white, rgba(255,255,255,.15) 1.5px, transparent 35px); background-size: 400px 400px; opacity: 0.12; z-index: 0; pointer-events: none; }
-        
-        .header { position: absolute; top: 60px; font-size: 1.4rem; letter-spacing: 0.8rem; text-transform: uppercase; font-weight: 300; z-index: 100; }
-        .main-content { display: flex; justify-content: center; align-items: center; width: 100%; height: 100%; z-index: 10; position: relative; }
-        .canvas-wrap { position: absolute; width: 100%; height: 100%; max-width: 1000px; max-height: 1000px; z-index: 5; }
-        canvas { width: 100%; height: 100%; display: block; }
-        
-        .nav { display: flex; flex-direction: column; align-items: center; gap: 40px; z-index: 200; pointer-events: auto; }
-        .nav a { color: #ffffff; text-decoration: none; font-size: 0.75rem; letter-spacing: 0.4rem; text-transform: uppercase; font-weight: 300; transition: color 0.4s; }
-        .nav a:hover { color: #888; }
-        
-        #footer { position: absolute; bottom: 30px; width: 100%; text-align: center; z-index: 100; }
-        .contact-row { display: flex; justify-content: center; align-items: center; gap: 15px; font-size: 0.55rem; color: #666; letter-spacing: 0.05rem; }
-        .copyright { font-size: 0.5rem; color: #222; margin-top: 15px; text-transform: uppercase; }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { background-color: #000; color: #fff; height: 100dvh; display: flex; flex-direction: column; align-items: center; justify-content: center; overflow: hidden; }
+        .canvas-wrap { position: absolute; width: 100vw; height: 100vh; z-index: 5; pointer-events: none; }
+        canvas { width: 100%; height: 100%; }
+        .nav { z-index: 200; display: flex; flex-direction: column; gap: 40px; }
+        .nav a { color: #fff; text-decoration: none; font-size: 0.75rem; letter-spacing: 0.4rem; text-transform: uppercase; }
     </style>
 </head>
 <body>
-    <div class="header">SYRINX</div>
-    <div class="main-content">
-        <div class="canvas-wrap"><canvas id="c"></canvas></div>
-        <nav class="nav">
-            <a href="store.html">STORE</a>
-            <a href="brand-history.html">BRAND HISTORY</a>
-        </nav>
-    </div>
-    <section id="footer">
-        <div class="contact-row">
-            <span>CONTACT</span> <span>syrinx.official@email.com</span> <span>@syrinx_official</span>
-        </div>
-        <p class="copyright">&copy; 2026 SYRINX. ALL RIGHTS RESERVED.</p>
-    </section>
+    <div class="canvas-wrap"><canvas id="c"></canvas></div>
+    <nav class="nav">
+        <a href="store.html">STORE</a>
+        <a href="brand-history.html">BRAND HISTORY</a>
+    </nav>
 
     <script>
         const cv = document.getElementById('c'), ctx = cv.getContext('2d');
         let W, H, cx, cy, t = 0, isWarping = false;
 
-        function resize() { W = cv.width = cv.offsetWidth; H = cv.height = cv.offsetHeight; cx = W/2; cy = H/2; }
+        function resize() { 
+            W = cv.width = cv.offsetWidth; 
+            H = cv.height = cv.offsetHeight; 
+            cx = W/2; cy = H/2; 
+        }
         window.addEventListener('resize', resize); resize();
 
-        window.onpageshow = () => { isWarping = false; document.body.style.opacity = "1"; };
+        // 뒤로가기 시 상태 즉시 복구
+        window.onpageshow = () => { isWarping = false; };
 
-        // 파도치는 수려한 모래시계 함수
         function drawWaveHourglass() {
-            const size = 50;
-            const yOffset = Math.sin(t * 0.05) * 10; 
-            
-            ctx.strokeStyle = "rgba(255,255,255,0.4)";
-            ctx.lineWidth = 1.5;
-            
-            // 모래시계 외곽 프레임
+            const size = 50, yOffset = Math.sin(t * 0.05) * 10;
+            ctx.strokeStyle = "#fff"; ctx.lineWidth = 1.5;
             ctx.beginPath();
-            ctx.moveTo(cx - size, cy - size + yOffset);
-            ctx.lineTo(cx + size, cy - size + yOffset);
-            ctx.lineTo(cx - size, cy + size + yOffset);
-            ctx.lineTo(cx + size, cy + size + yOffset);
-            ctx.closePath();
-            ctx.stroke();
-
-            // 내부 파도 표현
-            ctx.fillStyle = "rgba(255, 255, 255, 0.15)";
-            ctx.beginPath();
+            ctx.moveTo(cx - size, cy - size + yOffset); ctx.lineTo(cx + size, cy - size + yOffset);
+            ctx.lineTo(cx - size, cy + size + yOffset); ctx.lineTo(cx + size, cy + size + yOffset);
+            ctx.closePath(); ctx.stroke();
+            ctx.fillStyle = "rgba(255,255,255,0.15)"; ctx.beginPath();
             for(let x = -size; x <= size; x++) {
-                let waveY = Math.sin(x * 0.08 + t * 0.15) * 6;
-                ctx.lineTo(cx + x, cy + yOffset + waveY);
+                ctx.lineTo(cx + x, cy + yOffset + Math.sin(x * 0.08 + t * 0.15) * 6);
             }
-            ctx.lineTo(cx + size, cy + size + yOffset);
-            ctx.lineTo(cx - size, cy + size + yOffset);
+            ctx.lineTo(cx + size, cy + size + yOffset); ctx.lineTo(cx - size, cy + size + yOffset);
             ctx.fill();
         }
 
@@ -88,9 +54,9 @@
             if (isWarping) {
                 drawWaveHourglass();
             } else {
-                const R = Math.min(W, H) * 0.4;
-                [{ rx: 0.8, rz: 0.2, spd: 0.005 }, { rx: -0.6, rz: 1.1, spd: 0.004 }, { rx: 0.4, rz: -0.8, spd: 0.007 }].forEach(orb => {
-                    ctx.beginPath(); ctx.strokeStyle = "#fff"; ctx.globalAlpha = 0.1;
+                const R = Math.min(W, H) * 0.35; // 화면 밖으로 나가지 않게 비율 축소
+                [{rx: 0.8, rz: 0.2, spd: 0.005}, {rx: -0.6, rz: 1.1, spd: 0.004}, {rx: 0.4, rz: -0.8, spd: 0.007}].forEach(orb => {
+                    ctx.beginPath(); ctx.strokeStyle = "rgba(255,255,255,0.1)";
                     for(let a=0; a<Math.PI*2; a+=0.2) {
                         let x = R * Math.cos(a), y = R * Math.sin(a);
                         let y1 = y * Math.cos(orb.rx), z1 = y * Math.sin(orb.rx);
@@ -109,7 +75,7 @@
             link.addEventListener('click', function(e) {
                 e.preventDefault();
                 if(isWarping) return;
-                isWarping = true;
+                isWarping = true; // 이 값이 바뀌면 drawWaveHourglass가 호출됨
                 setTimeout(() => { window.location.href = this.href; }, 2000);
             });
         });
