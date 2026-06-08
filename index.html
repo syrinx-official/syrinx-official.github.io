@@ -6,13 +6,13 @@
     <title>SYRINX</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-        body { background-color: #000000; color: #ffffff; font-family: 'Helvetica Neue', Arial, sans-serif; height: 100vh; display: flex; flex-direction: column; justify-content: space-between; align-items: center; padding: 60px 20px 30px; overflow: hidden; cursor: pointer; }
-        body::before { content: ""; position: absolute; inset: 0; background: radial-gradient(white, rgba(255,255,255,.15) 1.5px, transparent 35px); background-size: 400px 400px; opacity: 0.12; z-index: 0; }
+        body { background-color: #000000; color: #ffffff; font-family: 'Helvetica Neue', Arial, sans-serif; height: 100vh; display: flex; flex-direction: column; justify-content: space-between; align-items: center; padding: 60px 20px 30px; overflow: hidden; cursor: pointer; touch-action: manipulation; }
+        body::before { content: ""; position: absolute; inset: 0; background: radial-gradient(white, rgba(255,255,255,.15) 1.5px, transparent 35px); background-size: 400px 400px; opacity: 0.12; z-index: 0; pointer-events: none; }
         .header { font-size: 1.4rem; letter-spacing: 0.8rem; text-transform: uppercase; font-weight: 300; z-index: 100; }
-        .main-content { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); display: flex; justify-content: center; align-items: center; width: 100%; height: 100%; z-index: 10; }
-        .canvas-wrap { position: absolute; width: 150vw; height: 150vw; max-width: 1200px; max-height: 1200px; pointer-events: none; z-index: 5; }
+        .main-content { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); display: flex; justify-content: center; align-items: center; width: 100%; height: 100%; z-index: 10; pointer-events: none; }
+        .canvas-wrap { position: absolute; width: 150vw; height: 150vw; max-width: 1200px; max-height: 1200px; z-index: 5; }
         canvas { width: 100%; height: 100%; opacity: 0.8; }
-        .nav { display: flex; flex-direction: column; align-items: center; gap: 40px; z-index: 200; }
+        .nav { display: flex; flex-direction: column; align-items: center; gap: 40px; z-index: 200; pointer-events: auto; }
         .nav a { color: #ffffff; text-decoration: none; font-size: 0.75rem; letter-spacing: 0.4rem; text-transform: uppercase; font-weight: 300; transition: color 0.4s; }
         .nav a:hover { color: #888; }
         #footer { width: 100%; text-align: center; z-index: 100; }
@@ -41,7 +41,8 @@
 
     <script>
         const cv = document.getElementById('c'), ctx = cv.getContext('2d');
-        let W, H, cx, cy, t = 0;
+        let W, H, cx, cy, t = 0, isWarping = false;
+
         function resize() { W = cv.width = cv.offsetWidth; H = cv.height = cv.offsetHeight; cx = W/2; cy = H/2; }
         window.addEventListener('resize', resize); resize();
 
@@ -59,10 +60,9 @@
         ];
 
         function frame() {
+            if (isWarping) return;
             ctx.clearRect(0, 0, W, H);
-            // 궤도를 화면보다 크게 설정 (기존 0.42 -> 0.6으로 확대)
-            const R = Math.min(W, H) * 0.6; 
-            
+            const R = Math.min(W, H) * 0.6;
             orbitSpecs.forEach(orb => {
                 ctx.beginPath();
                 for(let a=0; a<Math.PI*2; a+=0.2) {
@@ -74,20 +74,43 @@
                 ctx.lineWidth = 0.5;
                 ctx.stroke();
 
-                // 불규칙 움직임 적용 (Math.sin 활용하여 가감속)
                 let irregularAngle = (t * orb.spd) + Math.sin(t * 0.02) * 0.5;
                 let pt = getOrbitPt(R, irregularAngle, orb.rx, orb.rz);
-                
                 ctx.fillStyle = `rgba(255,255,255,${pt.z > 0 ? 0.9 : 0.3})`;
-                ctx.beginPath(); 
-                ctx.arc(pt.x, pt.y, pt.z > 0 ? 3.5 : 1.5, 0, Math.PI*2); 
-                ctx.fill();
+                ctx.beginPath(); ctx.arc(pt.x, pt.y, pt.z > 0 ? 3.5 : 1.5, 0, Math.PI*2); ctx.fill();
             });
             t++; requestAnimationFrame(frame);
         }
         frame();
 
-        // 사운드 로직 유지
+        // 페이지 전환 워프 애니메이션
+        document.querySelectorAll('nav a').forEach(link => {
+            link.addEventListener('click', function(e) {
+                e.preventDefault();
+                if(isWarping) return;
+                isWarping = true;
+                const target = this.href;
+                document.body.style.transition = "background 0.3s ease";
+                document.body.style.backgroundColor = "#ffffff";
+                
+                let warpSpeed = 1.0;
+                function warp() {
+                    warpSpeed *= 1.2;
+                    ctx.fillStyle = 'rgba(0,0,0,0.15)';
+                    ctx.fillRect(0, 0, W, H);
+                    ctx.shadowBlur = 20;
+                    ctx.fillStyle = "white";
+                    ctx.beginPath();
+                    ctx.arc(cx, cy, 2 * warpSpeed, 0, Math.PI * 2);
+                    ctx.fill();
+                    if (warpSpeed < 200) requestAnimationFrame(warp);
+                    else window.location.href = target;
+                }
+                warp();
+            });
+        });
+
+        // 사운드 시스템 (모바일 호환성 강화)
         let audioCtx;
         function playSound() {
             if (audioCtx) return;
@@ -113,41 +136,4 @@
                 }
                 setTimeout(ping, 2000 + Math.random() * 3000);
             }
-            ping();
-        }
-        ['click', 'touchstart'].forEach(e => document.addEventListener(e, () => { if(!audioCtx) playSound(); else audioCtx.resume(); }, { once: true }));
-    </script>
-    </a>
-    /* ── 페이지 전환 워프 애니메이션 ── */
-        document.querySelectorAll('nav a').forEach(link => {
-            link.addEventListener('click', function(e) {
-                e.preventDefault();
-                const target = this.href;
-
-                // 1. 화면 전체 화이트 플래시 효과
-                document.body.style.transition = "background 0.3s ease";
-                document.body.style.backgroundColor = "#ffffff";
-                
-                // 2. 캔버스 수렴 애니메이션 (워프 효과)
-                let warpSpeed = 1.0;
-                function warp() {
-                    warpSpeed *= 1.2;
-                    ctx.fillStyle = 'rgba(0,0,0,0.2)';
-                    ctx.fillRect(0, 0, W, H);
-                    
-                    // 원자들이 중심(cx, cy)으로 빨려 들어감
-                    ctx.shadowBlur = 20;
-                    ctx.shadowColor = "white";
-                    ctx.fillStyle = "white";
-                    ctx.beginPath();
-                    ctx.arc(cx, cy, 5 * warpSpeed, 0, Math.PI * 2);
-                    ctx.fill();
-
-                    if (warpSpeed < 100) requestAnimationFrame(warp);
-                    else window.location.href = target;
-                }
-                warp();
-            });
-        });
-</body>
-</html>
+            ping
