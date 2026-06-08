@@ -10,21 +10,15 @@
         body::before { content: ""; position: absolute; inset: 0; background: radial-gradient(white, rgba(255,255,255,.15) 1.5px, transparent 35px); background-size: 400px 400px; opacity: 0.12; z-index: 0; }
         .header { font-size: 1.4rem; letter-spacing: 0.8rem; text-transform: uppercase; font-weight: 300; z-index: 100; }
         .main-content { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); display: flex; justify-content: center; align-items: center; width: 100%; height: 100%; z-index: 10; }
-        .canvas-wrap { position: absolute; width: 120vw; height: 120vw; max-width: 850px; max-height: 850px; pointer-events: none; z-index: 5; }
+        .canvas-wrap { position: absolute; width: 150vw; height: 150vw; max-width: 1200px; max-height: 1200px; pointer-events: none; z-index: 5; }
         canvas { width: 100%; height: 100%; opacity: 0.8; }
         .nav { display: flex; flex-direction: column; align-items: center; gap: 40px; z-index: 200; }
         .nav a { color: #ffffff; text-decoration: none; font-size: 0.75rem; letter-spacing: 0.4rem; text-transform: uppercase; font-weight: 300; transition: color 0.4s; }
         .nav a:hover { color: #888; }
-        
         #footer { width: 100%; text-align: center; z-index: 100; }
         .contact-row { display: flex; justify-content: center; align-items: center; gap: 15px; font-size: 0.55rem; color: #666; letter-spacing: 0.05rem; white-space: nowrap; }
         .copyright { font-size: 0.5rem; color: #222; margin-top: 15px; text-transform: uppercase; }
-
-        @media (max-width: 480px) { 
-            .header { font-size: 1.1rem; } 
-            .nav { gap: 30px; } 
-            .contact-row { font-size: 0.5rem; gap: 8px; }
-        }
+        @media (max-width: 480px) { .header { font-size: 1.1rem; } .nav { gap: 30px; } .contact-row { font-size: 0.5rem; gap: 8px; } }
     </style>
 </head>
 <body>
@@ -59,14 +53,16 @@
         }
 
         const orbitSpecs = [
-            { rx: 0.8, rz: 0.2, spd: 0.007, color: 'rgba(255,255,255,0.05)' },
-            { rx: -0.6, rz: 1.1, spd: 0.006, color: 'rgba(255,255,255,0.03)' },
-            { rx: 0.4, rz: -0.8, spd: 0.009, color: 'rgba(255,255,255,0.04)' }
+            { rx: 0.8, rz: 0.2, spd: 0.005, color: 'rgba(255,255,255,0.05)' },
+            { rx: -0.6, rz: 1.1, spd: 0.004, color: 'rgba(255,255,255,0.03)' },
+            { rx: 0.4, rz: -0.8, spd: 0.007, color: 'rgba(255,255,255,0.04)' }
         ];
 
         function frame() {
             ctx.clearRect(0, 0, W, H);
-            const R = Math.min(W, H) * 0.42;
+            // 궤도를 화면보다 크게 설정 (기존 0.42 -> 0.6으로 확대)
+            const R = Math.min(W, H) * 0.6; 
+            
             orbitSpecs.forEach(orb => {
                 ctx.beginPath();
                 for(let a=0; a<Math.PI*2; a+=0.2) {
@@ -78,14 +74,20 @@
                 ctx.lineWidth = 0.5;
                 ctx.stroke();
 
-                let pt = getOrbitPt(R, t * orb.spd, orb.rx, orb.rz);
-                ctx.fillStyle = `rgba(255,255,255,${pt.z > 0 ? 0.8 : 0.2})`;
-                ctx.beginPath(); ctx.arc(pt.x, pt.y, pt.z > 0 ? 3 : 1.5, 0, Math.PI*2); ctx.fill();
+                // 불규칙 움직임 적용 (Math.sin 활용하여 가감속)
+                let irregularAngle = (t * orb.spd) + Math.sin(t * 0.02) * 0.5;
+                let pt = getOrbitPt(R, irregularAngle, orb.rx, orb.rz);
+                
+                ctx.fillStyle = `rgba(255,255,255,${pt.z > 0 ? 0.9 : 0.3})`;
+                ctx.beginPath(); 
+                ctx.arc(pt.x, pt.y, pt.z > 0 ? 3.5 : 1.5, 0, Math.PI*2); 
+                ctx.fill();
             });
             t++; requestAnimationFrame(frame);
         }
         frame();
 
+        // 사운드 로직 유지
         let audioCtx;
         function playSound() {
             if (audioCtx) return;
