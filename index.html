@@ -6,14 +6,17 @@
     <title>SYRINX</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { background-color: #000; color: #fff; height: 100dvh; display: flex; flex-direction: column; align-items: center; justify-content: center; overflow: hidden; }
+        body { background-color: #000; color: #fff; height: 100dvh; display: flex; flex-direction: column; align-items: center; justify-content: center; overflow: hidden; font-family: 'Helvetica Neue', Arial, sans-serif; cursor: pointer; }
+        .header { position: absolute; top: 60px; font-size: 1.4rem; letter-spacing: 0.8rem; text-transform: uppercase; font-weight: 300; z-index: 100; pointer-events: none; }
         .canvas-wrap { position: absolute; width: 100vw; height: 100vh; z-index: 5; pointer-events: none; }
         canvas { width: 100%; height: 100%; }
-        .nav { z-index: 200; display: flex; flex-direction: column; gap: 40px; }
-        .nav a { color: #fff; text-decoration: none; font-size: 0.75rem; letter-spacing: 0.4rem; text-transform: uppercase; }
+        .nav { z-index: 200; display: flex; flex-direction: column; align-items: center; gap: 40px; }
+        .nav a { color: #fff; text-decoration: none; font-size: 0.75rem; letter-spacing: 0.4rem; text-transform: uppercase; font-weight: 300; transition: color 0.3s; }
+        .nav a:hover { color: #888; }
     </style>
 </head>
 <body>
+    <div class="header">SYRINX</div>
     <div class="canvas-wrap"><canvas id="c"></canvas></div>
     <nav class="nav">
         <a href="store.html">STORE</a>
@@ -23,15 +26,32 @@
     <script>
         const cv = document.getElementById('c'), ctx = cv.getContext('2d');
         let W, H, cx, cy, t = 0, isWarping = false;
+        let audioCtx;
 
-        function resize() { 
-            W = cv.width = cv.offsetWidth; 
-            H = cv.height = cv.offsetHeight; 
-            cx = W/2; cy = H/2; 
-        }
+        function resize() { W = cv.width = cv.offsetWidth; H = cv.height = cv.offsetHeight; cx = W/2; cy = H/2; }
         window.addEventListener('resize', resize); resize();
 
-        // 뒤로가기 시 상태 즉시 복구
+        // 사운드 시스템
+        function playSound() {
+            if (audioCtx) return;
+            audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            const master = audioCtx.createGain(); master.connect(audioCtx.destination);
+            master.gain.value = 0.2;
+            function ping() {
+                const osc = audioCtx.createOscillator();
+                const g = audioCtx.createGain();
+                osc.frequency.value = 400 + Math.random() * 200;
+                g.gain.setValueAtTime(0, audioCtx.currentTime);
+                g.gain.linearRampToValueAtTime(0.1, audioCtx.currentTime + 0.05);
+                g.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 1);
+                osc.connect(g); g.connect(master);
+                osc.start(); osc.stop(audioCtx.currentTime + 1);
+                setTimeout(ping, 3000 + Math.random() * 2000);
+            }
+            ping();
+        }
+
+        // 상태 복구
         window.onpageshow = () => { isWarping = false; };
 
         function drawWaveHourglass() {
@@ -41,7 +61,7 @@
             ctx.moveTo(cx - size, cy - size + yOffset); ctx.lineTo(cx + size, cy - size + yOffset);
             ctx.lineTo(cx - size, cy + size + yOffset); ctx.lineTo(cx + size, cy + size + yOffset);
             ctx.closePath(); ctx.stroke();
-            ctx.fillStyle = "rgba(255,255,255,0.15)"; ctx.beginPath();
+            ctx.fillStyle = "rgba(255,255,255,0.2)"; ctx.beginPath();
             for(let x = -size; x <= size; x++) {
                 ctx.lineTo(cx + x, cy + yOffset + Math.sin(x * 0.08 + t * 0.15) * 6);
             }
@@ -54,11 +74,11 @@
             if (isWarping) {
                 drawWaveHourglass();
             } else {
-                const R = Math.min(W, H) * 0.35; // 화면 밖으로 나가지 않게 비율 축소
+                const R = Math.min(W, H) * 0.35;
                 [{rx: 0.8, rz: 0.2, spd: 0.005}, {rx: -0.6, rz: 1.1, spd: 0.004}, {rx: 0.4, rz: -0.8, spd: 0.007}].forEach(orb => {
                     ctx.beginPath(); ctx.strokeStyle = "rgba(255,255,255,0.1)";
                     for(let a=0; a<Math.PI*2; a+=0.2) {
-                        let x = R * Math.cos(a), y = R * Math.sin(a);
+                        let x = R * Math.cos(a + t * orb.spd), y = R * Math.sin(a + t * orb.spd);
                         let y1 = y * Math.cos(orb.rx), z1 = y * Math.sin(orb.rx);
                         let x2 = x * Math.cos(orb.rz) - y1 * Math.sin(orb.rz);
                         let y2 = x * Math.sin(orb.rz) + y1 * Math.cos(orb.rz);
@@ -71,11 +91,14 @@
         }
         frame();
 
+        // 이벤트 바인딩
+        document.body.addEventListener('click', () => { playSound(); }, { once: true });
         document.querySelectorAll('nav a').forEach(link => {
             link.addEventListener('click', function(e) {
                 e.preventDefault();
                 if(isWarping) return;
-                isWarping = true; // 이 값이 바뀌면 drawWaveHourglass가 호출됨
+                isWarping = true;
+                if(audioCtx) audioCtx.resume();
                 setTimeout(() => { window.location.href = this.href; }, 2000);
             });
         });
