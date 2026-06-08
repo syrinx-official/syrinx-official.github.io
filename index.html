@@ -78,33 +78,44 @@
         }
         frame();
 
-        // 1. 페이지 전환 애니메이션
+       // 1. 페이지 전환 워프 애니메이션
         document.querySelectorAll('nav a').forEach(link => {
             link.addEventListener('click', function(e) {
                 e.preventDefault();
                 if(isWarping) return;
                 isWarping = true;
                 const target = this.href;
-                document.body.style.transition = "background 0.5s ease";
+
+                // 배경 전환을 더 천천히 (1.5초)
+                document.body.style.transition = "background 1.5s ease";
                 document.body.style.backgroundColor = "#ffffff";
                 
                 let warpSpeed = 1.0;
                 function warp() {
-                    warpSpeed *= 1.2;
-                    ctx.fillStyle = 'rgba(0,0,0,0.2)';
+                    // 수렴 속도를 일정하게 더해줌 (곱하기보다 훨씬 부드러움)
+                    warpSpeed += 0.5; 
+                    
+                    ctx.fillStyle = 'rgba(0,0,0,0.1)';
                     ctx.fillRect(0, 0, W, H);
-                    ctx.shadowBlur = 20;
+                    
+                    ctx.shadowBlur = 10;
+                    ctx.shadowColor = "white";
                     ctx.fillStyle = "white";
                     ctx.beginPath();
-                    ctx.arc(cx, cy, 2 * warpSpeed, 0, Math.PI * 2);
+                    // 중심점으로 모이는 궤적 크기 조절
+                    ctx.arc(cx, cy, 3 * warpSpeed, 0, Math.PI * 2);
                     ctx.fill();
-                    if (warpSpeed < 300) requestAnimationFrame(warp);
-                    else window.location.href = target;
+
+                    // 애니메이션 지속 시간 늘림 (150까지 도달해야 이동)
+                    if (warpSpeed < 150) {
+                        requestAnimationFrame(warp);
+                    } else {
+                        window.location.href = target;
+                    }
                 }
                 warp();
             });
         });
-
         // 2. 사운드 시스템
         let audioCtx;
         function playSound() {
