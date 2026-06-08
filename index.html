@@ -14,10 +14,10 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            justify-content: space-between;
-            padding: 72px 20px 34px;
+            padding: 80px 20px 40px;
             position: relative;
             overflow: hidden;
+            cursor: pointer; /* 클릭 유도 */
         }
         body::before {
             content: "";
@@ -29,14 +29,17 @@
             pointer-events: none;
             z-index: 0;
         }
+
+        /* 황금 비율을 고려한 간격 설정 */
         .header {
-            font-size: 1.5rem;
-            letter-spacing: 0.8rem;
+            font-size: 1.6rem;
+            letter-spacing: 0.9rem;
             text-transform: uppercase;
-            font-weight: 400;
+            font-weight: 300;
             z-index: 10;
-            position: relative;
+            margin-bottom: 120px; /* 로고와 메뉴 사이 황금비율 간격 */
         }
+
         .canvas-wrap {
             position: absolute;
             top: 50%;
@@ -44,75 +47,36 @@
             transform: translate(-50%, -50%);
             z-index: 5;
         }
+
         .nav {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 28px;
+            gap: 32px;
             z-index: 20;
+            margin-bottom: auto;
         }
+
         .nav a {
             color: #ffffff;
             text-decoration: none;
             font-size: 0.75rem;
-            letter-spacing: 0.35rem;
+            letter-spacing: 0.4rem;
             text-transform: uppercase;
-            font-weight: 400;
             transition: color 0.3s;
-            white-space: nowrap;
         }
-        .nav a:hover { color: #666666; }
+
         #footer {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 0;
+            margin-top: auto;
+            text-align: center;
             z-index: 10;
-            position: relative;
         }
         .contact-row {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 20px;
-            font-size: 0.72rem;
-            color: #aaaaaa;
-            letter-spacing: 0.05rem;
+            display: flex; justify-content: center; align-items: center; gap: 20px;
+            font-size: 0.7rem; color: #777; letter-spacing: 0.1rem;
         }
         .copyright {
-            font-size: 0.62rem;
-            color: #333333;
-            letter-spacing: 0.1rem;
-            text-transform: uppercase;
-            margin-top: 16px;
-        }
-        #sound-btn {
-            position: fixed;
-            bottom: 28px;
-            right: 28px;
-            background: none;
-            border: 1px solid rgba(255,255,255,0.18);
-            color: rgba(255,255,255,0.4);
-            font-family: 'Helvetica Neue', Arial, sans-serif;
-            font-size: 0.55rem;
-            letter-spacing: 0.18rem;
-            text-transform: uppercase;
-            padding: 8px 14px;
-            cursor: pointer;
-            z-index: 100;
-            transition: color 0.3s, border-color 0.3s;
-        }
-        #sound-btn:hover {
-            color: rgba(255,255,255,0.75);
-            border-color: rgba(255,255,255,0.38);
-        }
-        #sound-btn.on {
-            color: rgba(255,255,255,0.65);
-            border-color: rgba(255,255,255,0.32);
+            font-size: 0.6rem; color: #333; letter-spacing: 0.15rem; margin-top: 16px;
         }
     </style>
 </head>
@@ -130,233 +94,76 @@
 
     <section id="footer">
         <div class="contact-row">
-            <span style="color:#555555; letter-spacing:0.12rem;">CONTACT</span>
+            <span>CONTACT</span>
             <span>syrinx.official@email.com</span>
             <span>@syrinx_official</span>
         </div>
         <p class="copyright">&copy; 2026 SYRINX. ALL RIGHTS RESERVED.</p>
     </section>
 
-    <button id="sound-btn">SOUND OFF</button>
-
     <script>
-        /* ── 원자 애니메이션 ── */
-        const cv = document.getElementById('c');
-        const ctx = cv.getContext('2d');
+        /* ── 원자 애니메이션 로직 (동일) ── */
+        const cv = document.getElementById('c'), ctx = cv.getContext('2d');
         const W = 900, H = 900, cx = 450, cy = 450;
-        const PERIOD = 15 * 60;
-        let t = 0;
-        let rotX = 0.38, rotY = 0.08;
-        let targetRX = 0.38, targetRY = 0.08;
+        let t = 0, rotX = 0.38, rotY = 0.08, targetRX = 0.38, targetRY = 0.08;
 
-        document.querySelector('.canvas-wrap').addEventListener('mousemove', e => {
+        document.addEventListener('mousemove', e => {
             const r = cv.getBoundingClientRect();
-            targetRX = 0.38 + (e.clientY - r.top  - H / 2) / (H / 2) * 0.28;
-            targetRY = 0.08 + (e.clientX - r.left - W / 2) / (W / 2) * 0.32;
+            targetRX = 0.38 + (e.clientY - r.top - H/2) / (H/2) * 0.2;
+            targetRY = 0.08 + (e.clientX - r.left - W/2) / (W/2) * 0.2;
         });
 
         function rot3(x, y, z, rx, ry) {
-            let y1 = y * Math.cos(rx) - z * Math.sin(rx);
-            let z1 = y * Math.sin(rx) + z * Math.cos(rx);
+            let y1 = y * Math.cos(rx) - z * Math.sin(rx), z1 = y * Math.sin(rx) + z * Math.cos(rx);
             let x2 = x * Math.cos(ry) + z1 * Math.sin(ry);
             return { x: x2, y: y1, z: -x * Math.sin(ry) + z1 * Math.cos(ry) };
         }
 
-        const R = 400;
-        const ORBITS = [
-            { tx: 0,    tz: 0,   spd: 1,    ph: 0    },
-            { tx: 1.05, tz: 0,   spd: 0.72, ph: 2.09 },
-            { tx: 0.52, tz: 1.0, spd: 0.55, ph: 4.19 },
-        ];
+        const R = 400, ORBITS = [{tx:0, tz:0, spd:1, ph:0}, {tx:1.05, tz:0, spd:0.72, ph:2.09}, {tx:0.52, tz:1.0, spd:0.55, ph:4.19}];
 
         function orbitPt(orb, a, rx, ry) {
             let lx = R * Math.cos(a), ly = R * Math.sin(a);
             let y1 = ly * Math.cos(orb.tx), z1 = ly * Math.sin(orb.tx);
-            let x2 = lx * Math.cos(orb.tz) - y1 * Math.sin(orb.tz);
-            let y2 = lx * Math.sin(orb.tz) + y1 * Math.cos(orb.tz);
+            let x2 = lx * Math.cos(orb.tz) - y1 * Math.sin(orb.tz), y2 = lx * Math.sin(orb.tz) + y1 * Math.cos(orb.tz);
             return rot3(x2, y2, z1, rx, ry);
-        }
-
-        function drawOrbit(orb, rx, ry) {
-            ctx.beginPath();
-            let first = true;
-            for (let a = 0; a <= Math.PI * 2 + 0.05; a += 0.03) {
-                const p = orbitPt(orb, a, rx, ry);
-                const sx = cx + p.x, sy = cy + p.y;
-                first ? ctx.moveTo(sx, sy) : ctx.lineTo(sx, sy);
-                first = false;
-            }
-            ctx.closePath();
-            ctx.strokeStyle = 'rgba(255,255,255,0.07)';
-            ctx.lineWidth = 0.6;
-            ctx.stroke();
         }
 
         function frame() {
             ctx.clearRect(0, 0, W, H);
-            rotX += (targetRX - rotX) * 0.04;
-            rotY += (targetRY - rotY) * 0.04;
-            ORBITS.forEach(o => drawOrbit(o, rotX, rotY));
-
-            const base = (t / PERIOD) * Math.PI * 2;
-            const pts = ORBITS.map(o => {
-                const p = orbitPt(o, base * o.spd + o.ph, rotX, rotY);
-                return { x: cx + p.x, y: cy + p.y, z: p.z };
-            });
-
-            pts.sort((a, b) => a.z - b.z).forEach(p => {
-                const behind = p.z < 0;
-                const alpha = behind ? 0.18 : 0.88;
-                const er = behind ? 2.5 : 4;
-                if (!behind) {
-                    const g = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, 14);
-                    g.addColorStop(0, 'rgba(255,255,255,0.12)');
-                    g.addColorStop(1, 'rgba(255,255,255,0)');
-                    ctx.beginPath();
-                    ctx.arc(p.x, p.y, 14, 0, Math.PI * 2);
-                    ctx.fillStyle = g; ctx.fill();
-                }
+            rotX += (targetRX - rotX) * 0.05; rotY += (targetRY - rotY) * 0.05;
+            ORBITS.forEach(o => {
                 ctx.beginPath();
-                ctx.arc(p.x, p.y, er, 0, Math.PI * 2);
-                ctx.fillStyle = `rgba(255,255,255,${alpha})`;
-                ctx.fill();
+                for (let a = 0; a <= Math.PI*2 + 0.1; a += 0.05) {
+                    const p = orbitPt(o, a, rotX, rotY);
+                    a === 0 ? ctx.moveTo(cx+p.x, cy+p.y) : ctx.lineTo(cx+p.x, cy+p.y);
+                }
+                ctx.strokeStyle = 'rgba(255,255,255,0.08)'; ctx.stroke();
             });
-
-            t++;
-            requestAnimationFrame(frame);
+            t++; requestAnimationFrame(frame);
         }
         frame();
 
-        /* ── 우주 공명 사운드 ── */
-        let audioCtx = null;
-        let masterGain = null;
-        let soundOn = false;
-        let audioReady = false;
-        const btn = document.getElementById('sound-btn');
-
-        function buildSound() {
+        /* ── 사운드 자동 시작 로직 ── */
+        let audioCtx;
+        function initAudio() {
+            if (audioCtx) return;
             audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-            masterGain = audioCtx.createGain();
-            masterGain.gain.setValueAtTime(0, audioCtx.currentTime);
-            masterGain.gain.linearRampToValueAtTime(0.72, audioCtx.currentTime + 5);
-            masterGain.connect(audioCtx.destination);
-
-            /* 드론 — 55Hz 베이스 */
-            const drone1 = audioCtx.createOscillator();
-            const g1 = audioCtx.createGain();
-            drone1.type = 'sine'; drone1.frequency.value = 55;
-            g1.gain.value = 0.38;
-            drone1.connect(g1); g1.connect(masterGain); drone1.start();
-
-            /* 배음 110Hz */
-            const drone2 = audioCtx.createOscillator();
-            const g2 = audioCtx.createGain();
-            drone2.type = 'sine'; drone2.frequency.value = 110.03;
-            g2.gain.value = 0.18;
-            drone2.connect(g2); g2.connect(masterGain); drone2.start();
-
-            /* 배음 165Hz */
-            const drone3 = audioCtx.createOscillator();
-            const g3 = audioCtx.createGain();
-            drone3.type = 'sine'; drone3.frequency.value = 164.8;
-            g3.gain.value = 0.09;
-            drone3.connect(g3); g3.connect(masterGain); drone3.start();
-
-            /* 스페이스 패드 — LFO 비브라토 */
-            const pad = audioCtx.createOscillator();
-            const padG = audioCtx.createGain();
-            const lfo = audioCtx.createOscillator();
-            const lfoG = audioCtx.createGain();
-            pad.type = 'sine'; pad.frequency.value = 330;
-            lfo.type = 'sine'; lfo.frequency.value = 0.07;
-            lfoG.gain.value = 6; padG.gain.value = 0.06;
-            lfo.connect(lfoG); lfoG.connect(pad.frequency);
-            pad.connect(padG); padG.connect(masterGain);
-            pad.start(); lfo.start();
-
-            /* 리버브 공간 */
-            const convolver = audioCtx.createConvolver();
-            const rLen = audioCtx.sampleRate * 6;
-            const rBuf = audioCtx.createBuffer(2, rLen, audioCtx.sampleRate);
-            for (let ch = 0; ch < 2; ch++) {
-                const d = rBuf.getChannelData(ch);
-                for (let i = 0; i < rLen; i++)
-                    d[i] = (Math.random() * 2 - 1) * Math.pow(1 - i / rLen, 2.4);
-            }
-            convolver.buffer = rBuf;
-
-            const revSrc = audioCtx.createOscillator();
-            const revG = audioCtx.createGain();
-            revSrc.type = 'sine'; revSrc.frequency.value = 220;
-            revG.gain.value = 0.04;
-            revSrc.connect(revG); revG.connect(convolver);
-            convolver.connect(masterGain); revSrc.start();
-
-            /* 랜덤 핑 */
-            function schedulePing() {
-                const delay = 4000 + Math.random() * 5000;
-                setTimeout(() => {
-                    if (!soundOn) return;
-                    const ping = audioCtx.createOscillator();
-                    const pingG = audioCtx.createGain();
-                    const freq = [220, 275, 330, 440, 165][Math.floor(Math.random() * 5)];
-                    ping.type = 'sine'; ping.frequency.value = freq;
-                    pingG.gain.setValueAtTime(0, audioCtx.currentTime);
-                    pingG.gain.linearRampToValueAtTime(0.14, audioCtx.currentTime + 0.08);
-                    pingG.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + 3.5);
-                    ping.connect(pingG); pingG.connect(convolver);
-                    ping.start(); ping.stop(audioCtx.currentTime + 3.6);
-                    schedulePing();
-                }, delay);
-            }
-            schedulePing();
-
-            audioReady = true;
-            soundOn = true;
+            const master = audioCtx.createGain();
+            master.connect(audioCtx.destination);
+            
+            // 베이스 드론 사운드
+            [55, 110, 165].forEach((f, i) => {
+                const osc = audioCtx.createOscillator();
+                const g = audioCtx.createGain();
+                osc.frequency.value = f; g.gain.value = 0.2 / (i+1);
+                osc.connect(g); g.connect(master); osc.start();
+            });
         }
 
-        /* 접속 즉시 자동재생 시도 — 성공하면 그대로, 실패하면 첫 인터랙션에서 재생 */
-        function tryAutoplay() {
-            if (audioReady) return;
-            buildSound();
-            if (audioCtx.state === 'suspended') {
-                audioCtx.resume().catch(() => {});
-            }
-        }
-
-        /* 즉시 시도 */
-        tryAutoplay();
-
-        /* 실패 대비 — 페이지 첫 인터랙션(클릭, 터치, 스크롤, 키)에서 재시도 */
-        const events = ['click', 'touchstart', 'keydown', 'scroll'];
-        function onFirstInteraction() {
-            if (!audioReady) buildSound();
-            else if (audioCtx && audioCtx.state === 'suspended') audioCtx.resume();
-            events.forEach(ev => document.removeEventListener(ev, onFirstInteraction));
-        }
-        events.forEach(ev => document.addEventListener(ev, onFirstInteraction, { once: true }));
-
-        /* SOUND OFF 버튼 */
-        btn.classList.add('on');
-        btn.addEventListener('click', e => {
-            e.stopPropagation();
-            if (!audioReady) { buildSound(); return; }
-            if (soundOn) {
-                masterGain.gain.cancelScheduledValues(audioCtx.currentTime);
-                masterGain.gain.setValueAtTime(masterGain.gain.value, audioCtx.currentTime);
-                masterGain.gain.linearRampToValueAtTime(0, audioCtx.currentTime + 2);
-                soundOn = false;
-                btn.textContent = 'SOUND ON';
-                btn.classList.remove('on');
-            } else {
-                masterGain.gain.cancelScheduledValues(audioCtx.currentTime);
-                masterGain.gain.setValueAtTime(masterGain.gain.value, audioCtx.currentTime);
-                masterGain.gain.linearRampToValueAtTime(0.72, audioCtx.currentTime + 2);
-                soundOn = true;
-                btn.textContent = 'SOUND OFF';
-                btn.classList.add('on');
-            }
-        });
+        document.addEventListener('click', () => {
+            if (!audioCtx) initAudio();
+            if (audioCtx.state === 'suspended') audioCtx.resume();
+        }, { once: true });
     </script>
 </body>
 </html>
